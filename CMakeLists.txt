@@ -10,7 +10,7 @@ add_library(Cead SHARED
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/oead)
 target_include_directories(Cead PUBLIC ${PROJECT_SOURCE_DIR}/lib/oead/src/include)
-target_link_directories(Cead PRIVATE ${PROJECT_SOURCE_DIR}/lib/oead/src/include)
+target_link_libraries(Cead PRIVATE oead)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
