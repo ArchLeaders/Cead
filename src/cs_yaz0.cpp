@@ -2,10 +2,15 @@
 
 using namespace oead;
 
-std::vector<u8> Compress(tcb::span<const u8> data, u32 dataAlignment, int level) {
-    return yaz0::Compress(data, dataAlignment, level);
+u8* Compress(const u8* src, int src_len, int& dst_len, u32 data_alignment, int level) {
+    auto data = tcb::span<const u8>(src, src_len);
+    auto dst_data = yaz0::Compress(data, data_alignment, level);
+    dst_len = dst_data.size();
+    return dst_data.data();
 }
 
-void Decompress(tcb::span<const u8> src, tcb::span<u8> dst) {
-    yaz0::Decompress(src, dst);
+void Decompress(const u8* src, int src_len, u8* dst, int dst_len) {
+    auto src_span = tcb::span<const u8>(src, src_len);
+    auto dst_span = tcb::span<u8>(dst, dst_len);
+    yaz0::Decompress(src_span, dst_span);
 }

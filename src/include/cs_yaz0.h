@@ -13,8 +13,8 @@ extern "C" {
 #define CS_YAZ0 __declspec(dllimport)
 #endif
 
-std::vector<u8> CS_YAZ0 Compress(tcb::span<const u8> data, u32 dataAlignment = 16, int level = 7);
-void CS_YAZ0 Decompress(tcb::span<const u8> src, tcb::span<u8> dst);
+u8* CS_YAZ0 Compress(const u8* src, int src_len, int& dst_len, u32 data_alignment, int level);
+void CS_YAZ0 Decompress(const u8* src, int src_len, u8* dst, int dst_len);
 
 #ifdef __cplusplus
 }
