@@ -5,13 +5,13 @@ namespace Cead.Interop
 {
     public static class DllManager
     {
-        private static readonly string[] Libs = { "Cead.dll" };
+        private static readonly string[] _libs = { "Cead.dll" };
         private static bool _isLoaded;
 
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr SetDllDirectory(string lpFileName);
 
-        internal static void LoadDlls()
+        internal static void Load()
         {
             if (_isLoaded) {
                 return;
@@ -19,7 +19,7 @@ namespace Cead.Interop
 
             string path = Path.Combine(Path.GetTempPath(), $"Cead-{typeof(Yaz0).Assembly.GetName().Version}");
 
-            foreach (var lib in Libs) {
+            foreach (var lib in _libs) {
                 string dll = Path.Combine(path, lib);
                 // Always copy in debug mode
 #if DEBUG
