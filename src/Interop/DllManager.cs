@@ -11,7 +11,7 @@ namespace Cead.Interop
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr SetDllDirectory(string lpFileName);
 
-        internal static void Load()
+        public static void Load()
         {
             if (_isLoaded) {
                 return;
@@ -24,13 +24,13 @@ namespace Cead.Interop
                 // Always copy in debug mode
 #if DEBUG
                 Directory.CreateDirectory(path);
-                using Stream stream = Assembly.GetCallingAssembly().GetManifestResourceStream($"Yaz0Library.Lib.Cead.dll")!;
+                using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Yaz0Library.Lib.Cead.dll")!;
                 using FileStream fs = File.Create(dll);
                 stream.CopyTo(fs);
 #else
                 if (!File.Exists(dll)) {
                     Directory.CreateDirectory(path);
-                    using Stream stream = Assembly.GetCallingAssembly().GetManifestResourceStream($"Yaz0Library.Lib.Cead.dll");
+                    using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Yaz0Library.Lib.Cead.dll");
                     using FileStream fs = File.Create(dll);
                     stream.CopyTo(fs);
                 }
