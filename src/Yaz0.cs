@@ -16,13 +16,13 @@ namespace Cead
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool FreeResource(IntPtr vector_ptr);
 
-        public static unsafe Span<byte> Compress(string file, int level = 7) => Compress(File.ReadAllBytes(file), level);
-        public static unsafe Span<byte> Compress(ReadOnlySpan<byte> src, int level = 7)
+        public static unsafe Span<byte> Compress(string file, out VoidSafeHandle handle, int level = 7) => Compress(File.ReadAllBytes(file), out handle, level);
+        public static unsafe Span<byte> Compress(ReadOnlySpan<byte> src, out VoidSafeHandle handle, int level = 7)
         {
             DllManager.Load();
 
             fixed (byte* srcPtr = src) {
-                Compress(srcPtr, src.Length, out VoidSafeHandle dstHandle, out byte* dst, out int dstLen, 0, level);
+                Compress(srcPtr, src.Length, out handle, out byte* dst, out int dstLen, 0, level);
                 return new(dst, dstLen);
             }
         }

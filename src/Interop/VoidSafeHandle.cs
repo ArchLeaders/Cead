@@ -2,9 +2,9 @@
 
 namespace Cead.Interop
 {
-    internal class VoidSafeHandle : SafeHandleZeroOrMinusOneIsInvalid
+    public class VoidSafeHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
-        internal VoidSafeHandle() : base(true) { }
+        public VoidSafeHandle() : base(true) { }
         protected override bool ReleaseHandle()
         {
             // TODO Create common FreeResource function
