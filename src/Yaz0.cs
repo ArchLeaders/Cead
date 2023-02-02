@@ -12,10 +12,6 @@ public static unsafe partial class Yaz0
     [LibraryImport("Cead.lib")]
     internal static unsafe partial void Decompress(byte* src, int src_len, byte* dst, int dst_len);
 
-    [LibraryImport("Cead.lib")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    internal static partial bool FreeVector(IntPtr vector_ptr);
-
     public static unsafe Span<byte> Compress(string file, out VectorSafeHandle handle, int level = 7) => Compress(File.ReadAllBytes(file), out handle, level);
     public static unsafe Span<byte> Compress(ReadOnlySpan<byte> src, out VectorSafeHandle handle, int level = 7)
     {
