@@ -1,4 +1,5 @@
 ﻿using Cead.Interop;
+using Cead.Interop.Handles;
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 
