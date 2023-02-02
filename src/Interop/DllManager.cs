@@ -5,7 +5,7 @@ namespace Cead.Interop
 {
     public static class DllManager
     {
-        private static readonly string[] _libs = { "Cead.dll" };
+        private static readonly string[] _libs = { "Cead.lib" };
         private static bool _isLoaded;
 
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -24,13 +24,13 @@ namespace Cead.Interop
                 // Always copy in debug mode
 #if DEBUG
                 Directory.CreateDirectory(path);
-                using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Yaz0Library.Lib.Cead.dll")!;
+                using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cead.Lib.{lib}")!;
                 using FileStream fs = File.Create(dll);
                 stream.CopyTo(fs);
 #else
                 if (!File.Exists(dll)) {
                     Directory.CreateDirectory(path);
-                    using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Yaz0Library.Lib.Cead.dll");
+                    using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cead.Lib.{lib}")!;
                     using FileStream fs = File.Create(dll);
                     stream.CopyTo(fs);
                 }
