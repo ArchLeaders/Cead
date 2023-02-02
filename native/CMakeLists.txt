@@ -11,7 +11,6 @@ set(CMAKE_CXX_STANDARD_LIBRARIES "-static -static-libgcc -static-libstdc++")
 include(CTest)
 enable_testing()
 
-add_definitions(-DSHARED_DLL)
 add_library(Cead SHARED
     ./src/include/cs_yaz0.h
     ./src/cs_yaz0.cpp

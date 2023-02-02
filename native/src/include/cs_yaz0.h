@@ -1,16 +1,10 @@
 #pragma once
-#define CS_YAZ0
+#define CS_YAZ0 __declspec(dllexport)
 
 #include <oead/yaz0.h>
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef SHARED_DLL
-#define CS_YAZ0 __declspec(dllexport)
-#else
-#define CS_YAZ0 __declspec(dllimport)
 #endif
 
 void CS_YAZ0 Compress(const u8* src, u32 src_len, void** dst_handle, u8** dst, u32* dst_len, u32 data_alignment, int level);
