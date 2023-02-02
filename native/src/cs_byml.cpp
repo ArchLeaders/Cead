@@ -5,8 +5,8 @@ void FromBinary(const u8* src, u32 src_len, void** dst) {
     *dst = new auto{byml};
 }
 
-void FromText(const char* src, u32 src_len, void** dst) {
-    Byml byml = Byml::FromText({src});
+void FromText(const char* src, void** dst) {
+    Byml byml = Byml::FromText(src);
     *dst = new auto{byml};
 }
 
@@ -19,7 +19,6 @@ void ToBinary(Byml* byml, void** dst_handle, u8** dst, u32* dst_len, bool big_en
 
 void ToText(Byml* byml, void** dst_handle, const char** dst) {
     auto str = new auto{byml->ToText()};
-    std::cout << "[c++] Converted sucessfully.\n";
     *dst_handle = str;
     *dst = str->c_str();
 }
