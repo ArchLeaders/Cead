@@ -42,6 +42,7 @@ public unsafe partial class Byml
 
     public BymlType Type => GetType(_byml);
 
+    public Byml(IntPtr byml) => _byml = byml;
     public Byml(ReadOnlySpan<byte> data)
     {
         DllManager.Load();
