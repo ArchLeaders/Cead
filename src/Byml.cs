@@ -4,6 +4,22 @@ using System.Runtime.InteropServices;
 
 namespace Cead;
 
+public enum BymlType : int
+{
+    Null,
+    String,
+    Binary,
+    Array,
+    Hash,
+    Bool,
+    Int,
+    Float,
+    UInt,
+    Int64,
+    UInt64,
+    Double
+}
+
 public unsafe partial class Byml
 {
     [LibraryImport("Cead.lib")]
@@ -18,7 +34,13 @@ public unsafe partial class Byml
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)]
     internal static unsafe partial void ToText(IntPtr byml, out StringSafeHandle handle, out IntPtr ptr);
 
-    private readonly IntPtr _byml;
+
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)]
+    internal static unsafe partial BymlType GetType(IntPtr byml);
+
+    internal readonly IntPtr _byml;
+
+    public BymlType Type => GetType(_byml);
 
     public Byml(ReadOnlySpan<byte> data)
     {
