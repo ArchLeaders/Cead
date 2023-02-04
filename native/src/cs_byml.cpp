@@ -1,24 +1,26 @@
 #include "include/cs_byml.h"
 
 Byml* FromBinary(const u8* src, u32 src_len) {
-    auto* result = &Byml::FromBinary({src, src_len});
+    auto* result = new auto{Byml::FromBinary({src, src_len})};
     return result;
 }
 
 Byml* FromText(const char* src) {
-    auto* result = &Byml::FromText(src);
+    auto* result = new auto{Byml::FromText(src)};
     return result;
 }
 
 void* ToBinary(Byml* byml, u8** dst, u32* dst_len, bool big_endian, int version) {
-    auto* result = &byml->ToBinary(big_endian, version);
+    auto* result = new auto{byml->ToBinary(big_endian, version)};
     *dst = result->data();
     *dst_len = result->size();
     return result;
 }
 
-const char* ToText(Byml* byml, std::string** handle) {
-    return byml->ToText().c_str();
+std::string* ToText(Byml* byml, const char** dst) {
+    std::string* str = new auto{byml->ToText()};
+    *dst = str->c_str();
+    return str;
 }
 
 Byml::Type GetType(Byml* byml) {
@@ -29,11 +31,8 @@ Byml::Hash* GetHash(Byml* byml) {
     return &byml->GetHash();
 }
 
-Byml::Array* GetArray(Byml* byml, Byml** dst, u32* dst_size) {
-    auto* result = &byml->GetArray();
-    *dst = result->data();
-    *dst_size = result->size();
-    return result;
+Byml::Array* GetArray(Byml* byml) {
+    return &byml->GetArray();
 }
 
 const char* GetString(Byml* byml) {
