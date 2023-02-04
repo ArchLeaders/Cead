@@ -10,72 +10,61 @@ public partial class Byml
     {
         [LibraryImport("Cead.lib")] private static unsafe partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport("Cead.lib")] private static unsafe partial void ArraySet(IntPtr vector, int index, Byml value);
-        [LibraryImport("Cead.lib")] private static unsafe partial void Clear(IntPtr vector);
-        [LibraryImport("Cead.lib")] private static unsafe partial int Length(IntPtr vector);
+        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(IntPtr hash, string key, Byml value);
+        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(IntPtr hash, string key);
+        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool ArrayContains(IntPtr hash, string key);
+        [LibraryImport("Cead.lib")] private static unsafe partial void ArrayClear(IntPtr vector);
+        [LibraryImport("Cead.lib")] private static unsafe partial int ArrayLength(IntPtr vector);
+        [LibraryImport("Cead.lib")] private static partial Byml ArrayCurrent(IntPtr array, int index);
 
+        public Array() : base(IntPtr.Zero, true) { }
         internal unsafe Array(IntPtr handle) : base(handle, true) { }
 
-        public Byml this[int index]
-        {
+        public Byml this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => ArrayGet(handle, index);
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => ArraySet(handle, index, value);
         }
 
-        public int Length => Size(handle);
-
+        public int Length => ArrayLength(handle);
         public override bool IsInvalid { get; }
 
-        /// <summary>Gets an enumerator for this span.</summary>
-        public Enumerator GetEnumerator() => new(this);
+        public void Add() => ArrayClear(handle);
+        public void Remove() => ArrayClear(handle);
+        public void Clear() => ArrayClear(handle);
 
-        /// <summary>Enumerates the elements of a <see cref="Span{T}"/>.</summary>
+        public Enumerator GetEnumerator() => new(handle, Length);
+
         public ref struct Enumerator
         {
-            /// <summary>The span being enumerated.</summary>
-            private readonly Array _vector;
-            /// <summary>The next index to yield.</summary>
+            private readonly IntPtr _array;
+            private readonly int _length;
             private int _index;
 
-            /// <summary>Initialize the enumerator.</summary>
-            /// <param name="vector">The span to enumerate.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal Enumerator(Array vector)
+            internal Enumerator(IntPtr array, int length)
             {
-                _vector = vector;
+                _array = array;
+                _length = length;
                 _index = -1;
             }
 
-            /// <summary>Advances the enumerator to the next element of the span.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
             {
-                int index = _index + 1;
-                if (index < _vector.Length)
-                {
-                    _index = index;
+                _index++;
+                if (_index < _length) {
                     return true;
                 }
 
                 return false;
             }
 
-            /// <summary>Gets the element at the current position of the enumerator.</summary>
-            public Byml Current
-            {
+            public Byml Current {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => _vector[_index];
+                get => ArrayCurrent(_array, _index);
             }
-        }
-
-        /// <summary>
-        /// Clears the contents of this span.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Clear()
-        {
-            Clear(handle);
         }
 
         protected override bool ReleaseHandle()
