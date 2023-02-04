@@ -13,6 +13,7 @@ enable_testing()
 
 add_library(Cead SHARED
     ./src/include/handles.h
+    ./src/handles.cpp
 
     ./src/include/cs_yaz0.h
     ./src/cs_yaz0.cpp
