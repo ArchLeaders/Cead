@@ -9,7 +9,7 @@ public static class DllManager
     private static bool _isLoaded;
 
     [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SetDllDirectory(string lpFileName);
+    private static extern IntPtr SetDllDirectory(string lpFileName);
 
     public static void Load()
     {
