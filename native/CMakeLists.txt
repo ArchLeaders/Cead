@@ -17,7 +17,9 @@ add_library(Cead SHARED
 
     ./src/include/cs_yaz0.h
     ./src/cs_yaz0.cpp
-    
+
+    ./src/include/cs_array.h
+    ./src/cs_array.cpp
     ./src/include/cs_byml.h
     ./src/cs_byml.cpp
     ./src/include/cs_hash.h
