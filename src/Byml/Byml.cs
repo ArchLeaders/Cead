@@ -62,7 +62,7 @@ public unsafe partial class Byml : SafeHandle
     {
         // Important that we acknowledge the returned
         // handle to properly parse the dst ptr
-        _ = ToText(handle, out IntPtr dst);
+        using PtrHandle handle = ToText(this.handle, out IntPtr dst);
         return Marshal.PtrToStringUTF8(dst);
     }
 
