@@ -12,18 +12,17 @@ public partial class Byml
         [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashSet(IntPtr hash, string key, Byml value);
         [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashAdd(IntPtr hash, string key, Byml value);
         [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashRemove(IntPtr hash, string key);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] [return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashContains(IntPtr hash, string key);
+        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashContains(IntPtr hash, string key);
         [LibraryImport("Cead.lib")] private static partial void HashClear(IntPtr hash);
         [LibraryImport("Cead.lib")] private static partial int HashLength(IntPtr hash);
 
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashExpandIterator(IntPtr iterator, out string key, out Byml value);
+        [LibraryImport("Cead.lib")] private static partial void HashCurrent(IntPtr iterator, out IntPtr key, out Byml value);
         [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
         [LibraryImport("Cead.lib")] private static partial IntPtr HashBegin(IntPtr hash);
 
-        public Hash(IntPtr handle) : base(handle, true) { }
+        public Hash() : base(IntPtr.Zero, true) { }
 
-        public Byml this[string key]
-        {
+        public Byml this[string key] {
             get => HashGet(handle, key);
             set => HashSet(handle, key, value);
         }
@@ -49,7 +48,7 @@ public partial class Byml
             internal Enumerator(IntPtr hash)
             {
                 _hash = hash;
-                _iterator = HashBegin(hash);
+                _iterator = IntPtr.Zero;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -59,16 +58,15 @@ public partial class Byml
             public KeyValuePair<string, Byml> Current {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get {
-                    HashExpandIterator(_iterator, out string key, out Byml value);
-                    return new(key, value);
+                    HashCurrent(_iterator, out IntPtr keyPtr, out Byml value);
+                    return new(Marshal.PtrToStringUTF8(keyPtr)!, value);
                 }
             }
         }
 
         protected override bool ReleaseHandle()
         {
-            PtrHandle.FreePtr(handle);
-            return true;
+            return PtrHandle.FreePtr(handle);
         }
     }
 }

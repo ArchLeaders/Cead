@@ -1,7 +1,7 @@
 #include "include/cs_hash.h"
 
 Byml* HashGet(Byml::Hash* hash, const char* key) {
-    return &(*hash)[key];
+    return &hash->at(key);
 }
 
 void HashSet(Byml::Hash* hash, const char* key, Byml* value) {
@@ -28,15 +28,20 @@ int HashLength(Byml::Hash* hash) {
     return hash->size();
 }
 
-void HashExpandIterator(absl::btree_map<std::string, Byml>::iterator* iterator, const char** key, Byml** value) {
+void HashCurrent(Byml::Hash::iterator* iterator, const char** key, Byml** value) {
     auto it = *iterator;
     *key = it->first.c_str();
     *value = &it->second;
 }
 
-bool HashAdvance(Byml::Hash* hash, absl::btree_map<std::string, Byml>::iterator* iterator, absl::btree_map<std::string, Byml>::iterator** next) {
-    std::advance(iterator, 1);
-    if ((*iterator) != hash->end()) {
+bool HashAdvance(Byml::Hash* hash, Byml::Hash::iterator* iterator, Byml::Hash::iterator** next) {
+    if (iterator == NULL) {
+        *next = new auto{hash->begin()};
+        return true;
+    }
+
+    if (++(*iterator) != hash->end()) {
+        *next = iterator;
         return true;
     }
 
@@ -44,5 +49,5 @@ bool HashAdvance(Byml::Hash* hash, absl::btree_map<std::string, Byml>::iterator*
 }
 
 auto* HashBegin(Byml::Hash* hash) {
-    return &hash->begin();
+    return new auto{hash->begin()};
 }

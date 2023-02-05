@@ -15,7 +15,7 @@ CEAD bool HashContains(Byml::Hash* hash, const char* key);
 CEAD void HashClear(Byml::Hash* hash);
 CEAD int HashLength(Byml::Hash* hash);
 
-CEAD void HashExpandIterator(absl::btree_map<std::string, Byml>::iterator* iterator, const char** key, Byml** value);
+CEAD void HashCurrent(absl::btree_map<std::string, Byml>::iterator* iterator, const char** key, Byml** value);
 CEAD bool HashAdvance(Byml::Hash* hash, absl::btree_map<std::string, Byml>::iterator* iterator, absl::btree_map<std::string, Byml>::iterator** next);
 CEAD auto* HashBegin(Byml::Hash* hash);
 }
