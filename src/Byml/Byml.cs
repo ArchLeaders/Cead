@@ -87,7 +87,6 @@ public unsafe partial class Byml : SafeHandle
 
     protected override bool ReleaseHandle()
     {
-        PtrHandle.FreePtr(handle);
-        return true;
+        return PtrHandle.FreePtr(handle);
     }
 }

@@ -69,8 +69,7 @@ public partial class Byml
 
         protected override bool ReleaseHandle()
         {
-            PtrHandle.FreePtr(handle);
-            return true;
+            return PtrHandle.FreePtr(handle);
         }
     }
 }

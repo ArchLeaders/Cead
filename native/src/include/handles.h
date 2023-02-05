@@ -9,5 +9,5 @@
 
 extern "C" {
 
-CEAD void FreePtr(void* ptr);
+CEAD bool FreePtr(void* ptr);
 }

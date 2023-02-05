@@ -1,5 +1,6 @@
 #include "include/handles.h"
 
-void FreePtr(void* ptr) {
+bool FreePtr(void* ptr) {
     free(ptr);
+    return true;
 }
