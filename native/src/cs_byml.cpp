@@ -17,9 +17,10 @@ void* ToBinary(Byml* byml, u8** dst, u32* dst_len, bool big_endian, int version)
     return result;
 }
 
-std::string* ToText(Byml* byml, const char** dst) {
+std::string* ToText(Byml* byml, const char** dst, int* dst_len) {
     std::string* str = new auto{byml->ToText()};
     *dst = str->c_str();
+    *dst_len = str->length();
     return str;
 }
 

@@ -1,4 +1,5 @@
 ﻿using Cead.Interop;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -25,7 +26,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib")] private static partial Byml FromBinary(byte* src, int src_len);
     [LibraryImport("Cead.lib")] private static partial PtrHandle ToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] public static partial Byml FromText(string src);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial PtrHandle ToText(IntPtr byml, out IntPtr dst);
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] private static partial BymlType GetType(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial Hash GetHash(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial Array GetArray(IntPtr byml);
@@ -61,9 +62,17 @@ public unsafe partial class Byml : SafeHandle
     public string? ToText()
     {
         // Important that we acknowledge the returned
-        // handle to properly parse the dst ptr
-        using PtrHandle handle = ToText(this.handle, out IntPtr dst);
-        return Marshal.PtrToStringUTF8(dst);
+        // handle before copying the ptr data
+        using PtrHandle handle = ToText(this.handle, out byte* dst, out int _);
+        return Marshal.PtrToStringUTF8((IntPtr)dst);
+    }
+
+    public void ToText(string file)
+    {
+        using PtrHandle handle = ToText(this.handle, out byte* dst, out int dst_len);
+        using FileStream fs = File.Create(file);
+        Span<byte> data = new(dst, dst_len);
+        fs.Write(data);
     }
 
     public Hash GetHash() => GetHash(handle);
