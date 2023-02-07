@@ -10,9 +10,8 @@ public partial class Byml
     {
         [LibraryImport("Cead.lib")] private static unsafe partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport("Cead.lib")] private static unsafe partial void ArraySet(IntPtr vector, int index, Byml value);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(IntPtr hash, string key, Byml value);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(IntPtr hash, string key);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool ArrayContains(IntPtr hash, string key);
+        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(IntPtr hash, Byml value);
+        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(IntPtr hash, int index);
         [LibraryImport("Cead.lib")] private static unsafe partial void ArrayClear(IntPtr vector);
         [LibraryImport("Cead.lib")] private static unsafe partial int ArrayLength(IntPtr vector);
         [LibraryImport("Cead.lib")] private static partial Byml ArrayCurrent(IntPtr array, int index);
@@ -31,8 +30,8 @@ public partial class Byml
 
         public int Length => ArrayLength(handle);
 
-        public void Add() => ArrayClear(handle);
-        public void Remove() => ArrayClear(handle);
+        public void Add(Byml node) => ArrayAdd(handle, node);
+        public void Remove(int index) => ArrayRemove(handle, index);
         public void Clear() => ArrayClear(handle);
 
         public Enumerator GetEnumerator() => new(handle, Length);

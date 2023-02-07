@@ -16,11 +16,6 @@ void ArrayRemove(Byml::Array* array, int index) {
     array->erase(array->begin() + index);
 }
 
-bool ArrayContains(Byml::Array* array, Byml* value) {
-    // return std::find(array->begin(), array->end(), value) != array->end();
-    return false;
-}
-
 void ArrayClear(Byml::Array* array) {
     array->clear();
 }
