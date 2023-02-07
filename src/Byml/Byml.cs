@@ -28,8 +28,8 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] public static partial Byml FromText(string src);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] private static partial BymlType GetType(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial Hash GetHash(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial Array GetArray(IntPtr byml);
+    [LibraryImport("Cead.lib")] private static partial IntPtr GetHash(IntPtr byml);
+    [LibraryImport("Cead.lib")] private static partial IntPtr GetArray(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial IntPtr GetString(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial PtrHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetBool(IntPtr byml);

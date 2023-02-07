@@ -6,7 +6,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public partial class Array : SafeHandle
+    public partial class Array
     {
         [LibraryImport("Cead.lib")] private static unsafe partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport("Cead.lib")] private static unsafe partial void ArraySet(IntPtr vector, int index, Byml value);
@@ -17,8 +17,10 @@ public partial class Byml
         [LibraryImport("Cead.lib")] private static unsafe partial int ArrayLength(IntPtr vector);
         [LibraryImport("Cead.lib")] private static partial Byml ArrayCurrent(IntPtr array, int index);
 
-        public Array() : base(IntPtr.Zero, true) { }
-        internal unsafe Array(IntPtr handle) : base(handle, true) { }
+        public static implicit operator Array(IntPtr ptr) => new(ptr);
+        internal unsafe Array(IntPtr handle) => this.handle = handle;
+
+        private readonly IntPtr handle = IntPtr.Zero;
 
         public Byml this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,7 +30,6 @@ public partial class Byml
         }
 
         public int Length => ArrayLength(handle);
-        public override bool IsInvalid { get; }
 
         public void Add() => ArrayClear(handle);
         public void Remove() => ArrayClear(handle);
@@ -65,11 +66,6 @@ public partial class Byml
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => ArrayCurrent(_array, _index);
             }
-        }
-
-        protected override bool ReleaseHandle()
-        {
-            return PtrHandle.FreePtr(handle);
         }
     }
 }

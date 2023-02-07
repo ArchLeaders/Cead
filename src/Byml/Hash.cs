@@ -1,12 +1,11 @@
-﻿using Cead.Interop;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Hash : SafeHandle
+    public unsafe partial class Hash
     {
         [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial Byml HashGet(IntPtr hash, string key);
         [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashSet(IntPtr hash, string key, Byml value);
@@ -20,7 +19,10 @@ public partial class Byml
         [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
         [LibraryImport("Cead.lib")] private static partial IntPtr HashBegin(IntPtr hash);
 
-        public Hash() : base(IntPtr.Zero, true) { }
+        private readonly IntPtr handle = IntPtr.Zero;
+
+        public static implicit operator Hash(IntPtr ptr) => new(ptr);
+        public Hash(nint handle) => this.handle = handle;
 
         public Byml this[string key] {
             get => HashGet(handle, key);
@@ -28,7 +30,6 @@ public partial class Byml
         }
 
         public int Length => HashLength(handle);
-        public override bool IsInvalid { get; }
 
         public void Add(string key, Byml value) => HashAdd(handle, key, value);
         public void Remove(string key) => HashRemove(handle, key);
@@ -62,11 +63,6 @@ public partial class Byml
                     return new(Marshal.PtrToStringUTF8(keyPtr)!, value);
                 }
             }
-        }
-
-        protected override bool ReleaseHandle()
-        {
-            return PtrHandle.FreePtr(handle);
         }
     }
 }
