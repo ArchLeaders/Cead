@@ -145,6 +145,7 @@ public unsafe partial class Byml : SafeHandle
     public static implicit operator Byml(string value) => new(value);
     public Byml(string value) : base(String(value), true) { }
 
+    public static implicit operator Byml(byte[] value) => new(value.AsSpan());
     public static implicit operator Byml(Span<byte> value) => new(value);
     public Byml(Span<byte> value) : base(Binary(value), true) { }
 
