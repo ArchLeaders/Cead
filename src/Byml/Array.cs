@@ -19,7 +19,7 @@ public partial class Byml
         public static implicit operator Array(IntPtr ptr) => new(ptr);
         internal unsafe Array(IntPtr handle) => this.handle = handle;
 
-        private readonly IntPtr handle = IntPtr.Zero;
+        internal readonly IntPtr handle = IntPtr.Zero;
 
         public Byml this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

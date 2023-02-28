@@ -26,7 +26,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib")] private static partial Byml FromBinary(byte* src, int src_len);
     [LibraryImport("Cead.lib")] private static partial PtrHandle ToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] public static partial Byml FromTextCOM(string src);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
+    [LibraryImport("Cead.lib")] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] private static partial BymlType GetType(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial IntPtr GetHash(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial IntPtr GetArray(IntPtr byml);
@@ -39,6 +39,18 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib")] private static partial long GetInt64(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial ulong GetUInt64(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial double GetDouble(IntPtr byml);
+
+    [LibraryImport("Cead.lib", EntryPoint = "Hash")] private static partial IntPtr HashCOM(IntPtr value);
+    [LibraryImport("Cead.lib", EntryPoint = "Array")] private static partial IntPtr ArrayCOM(IntPtr value);
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial IntPtr String(string value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr Binary(byte* value, int value_len);
+    [LibraryImport("Cead.lib")] private static partial IntPtr Bool([MarshalAs(UnmanagedType.Bool)] bool value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr Int(int value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr UInt(uint value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr Float(float value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr Int64(long value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr UInt64(ulong value);
+    [LibraryImport("Cead.lib")] private static partial IntPtr Double(double value);
 
     internal Byml() : base(IntPtr.Zero, true) { }
 
@@ -123,6 +135,46 @@ public unsafe partial class Byml : SafeHandle
     public long GetInt64() => GetInt64(handle);
     public ulong GetUInt64() => GetUInt64(handle);
     public double GetDouble() => GetDouble(handle);
+
+    public static implicit operator Byml(Hash value) => new(value);
+    public Byml(Hash value) : base(HashCOM(value.handle), true) { }
+
+    public static implicit operator Byml(Array value) => new(value);
+    public Byml(Array value) : base(ArrayCOM(value.handle), true) { }
+
+    public static implicit operator Byml(string value) => new(value);
+    public Byml(string value) : base(String(value), true) { }
+
+    public static implicit operator Byml(Span<byte> value) => new(value);
+    public Byml(Span<byte> value) : base(Binary(value), true) { }
+
+    public static implicit operator Byml(bool value) => new(value);
+    public Byml(bool value) : base(Bool(value), true) { }
+
+    public static implicit operator Byml(int value) => new(value);
+    public Byml(int value) : base(Int(value), true) { }
+
+    public static implicit operator Byml(uint value) => new(value);
+    public Byml(uint value) : base(UInt(value), true) { }
+
+    public static implicit operator Byml(float value) => new(value);
+    public Byml(float value) : base(Float(value), true) { }
+
+    public static implicit operator Byml(long value) => new(value);
+    public Byml(long value) : base(Int64(value), true) { }
+
+    public static implicit operator Byml(ulong value) => new(value);
+    public Byml(ulong value) : base(UInt64(value), true) { }
+
+    public static implicit operator Byml(double value) => new(value);
+    public Byml(double value) : base(Double(value), true) { }
+
+    private static IntPtr Binary(Span<byte> value)
+    {
+        fixed(byte* ptr = value) {
+            return Binary(ptr, value.Length);
+        }
+    }
 
     protected override bool ReleaseHandle()
     {

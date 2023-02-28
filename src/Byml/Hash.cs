@@ -19,7 +19,7 @@ public partial class Byml
         [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
         [LibraryImport("Cead.lib")] private static partial IntPtr HashBegin(IntPtr hash);
 
-        private readonly IntPtr handle = IntPtr.Zero;
+        internal readonly IntPtr handle = IntPtr.Zero;
 
         public static implicit operator Hash(IntPtr ptr) => new(ptr);
         public Hash(nint handle) => this.handle = handle;

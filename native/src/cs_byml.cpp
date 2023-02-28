@@ -74,3 +74,43 @@ u64 GetUInt64(Byml* byml) {
 f64 GetDouble(Byml* byml) {
     return byml->GetDouble();
 }
+
+Byml* Hash(Byml::Hash* value) {
+    return new auto{Byml(*value)};
+}
+
+Byml* Array(Byml::Array* value) {
+    return new auto{Byml(*value)};
+}
+
+Byml* String(char* value) {
+    return new auto{Byml(std::string(value))};
+}
+
+Byml* Binary(u8* value, int value_len) {
+    return new auto{Byml(std::vector<u8>(value_len, *value))};
+}
+
+Byml* Int(S32 value) {
+    return new auto{Byml(value)};
+}
+
+Byml* UInt(U32 value) {
+    return new auto{Byml(value)};
+}
+
+Byml* Float(F32 value) {
+    return new auto{Byml(value)};
+}
+
+Byml* Int64(S64 value) {
+    return new auto{Byml(value)};
+}
+
+Byml* UInt64(U64 value) {
+    return new auto{Byml(value)};
+}
+
+Byml* Double(F64 value) {
+    return new auto{Byml(value)};
+}

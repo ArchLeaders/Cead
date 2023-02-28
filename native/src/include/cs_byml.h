@@ -23,4 +23,16 @@ CEAD f32 GetFloat(Byml* byml);
 CEAD s64 GetInt64(Byml* byml);
 CEAD u64 GetUInt64(Byml* byml);
 CEAD f64 GetDouble(Byml* byml);
+
+// Constructor wrapper functions
+CEAD Byml* Hash(Byml::Hash* value);
+CEAD Byml* Array(Byml::Array* value);
+CEAD Byml* String(char* value);
+CEAD Byml* Binary(u8* value, int value_len);
+CEAD Byml* Int(S32 value);
+CEAD Byml* UInt(U32 value);
+CEAD Byml* Float(F32 value);
+CEAD Byml* Int64(S64 value);
+CEAD Byml* UInt64(U64 value);
+CEAD Byml* Double(F64 value);
 }
