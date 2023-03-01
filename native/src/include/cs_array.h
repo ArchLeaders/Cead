@@ -16,4 +16,7 @@ CEAD void ArrayRemove(Byml::Array* array, int index);
 CEAD void ArrayClear(Byml::Array* array);
 CEAD int ArrayLength(Byml::Array* array);
 CEAD Byml* ArrayCurrent(Byml::Array* array, int index);
+
+CEAD Byml::Array* BuildEmptyArray();
+CEAD Byml::Array* BuildArray(Byml** values, u32 values_len);
 }

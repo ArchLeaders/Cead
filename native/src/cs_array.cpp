@@ -27,3 +27,11 @@ int ArrayLength(Byml::Array* array) {
 Byml* ArrayCurrent(Byml::Array* array, int index) {
     return &array->at(index);
 }
+
+Byml::Array* BuildEmptyArray() {
+    return new auto{Byml::Array{0}};
+}
+
+Byml::Array* BuildArray(Byml** values, u32 values_len) {
+    return new auto{Byml::Array{*values, *values + values_len}};
+}

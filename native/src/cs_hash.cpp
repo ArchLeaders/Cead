@@ -51,3 +51,16 @@ bool HashAdvance(Byml::Hash* hash, Byml::Hash::iterator* iterator, Byml::Hash::i
 auto* HashBegin(Byml::Hash* hash) {
     return new auto{hash->begin()};
 }
+
+Byml::Hash* BuildEmptyHash() {
+    return new auto{Byml::Hash{}};
+}
+
+Byml::Hash* BuildHash(char*** keys, Byml** values, u32 values_len) {
+    Byml::Hash hash{};
+    for (size_t i = 0; i < values_len; i++) {
+        hash.insert({(*keys)[i], (*values)[i]});
+    }
+
+    return new auto{hash};
+}
