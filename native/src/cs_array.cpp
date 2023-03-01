@@ -29,7 +29,7 @@ Byml* ArrayCurrent(Byml::Array* array, int index) {
 }
 
 Byml::Array* BuildEmptyArray() {
-    return new auto{Byml::Array{0}};
+    return new Byml::Array{};
 }
 
 Byml::Array* BuildArray(Byml** values, u32 values_len) {

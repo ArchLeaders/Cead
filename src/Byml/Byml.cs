@@ -29,7 +29,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib")] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] private static partial BymlType GetType(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial IntPtr GetHash(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial IntPtr GetArray(IntPtr byml);
+    [LibraryImport("Cead.lib")] private static partial Array GetArray(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial IntPtr GetString(IntPtr byml);
     [LibraryImport("Cead.lib")] private static partial PtrHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetBool(IntPtr byml);
@@ -52,6 +52,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib")] private static partial IntPtr UInt64(ulong value);
     [LibraryImport("Cead.lib")] private static partial IntPtr Double(double value);
 
+    public static implicit operator IntPtr(Byml byml) => byml.handle;
     internal Byml() : base(IntPtr.Zero, true) { }
 
     public BymlType Type => GetType(handle);
@@ -140,7 +141,7 @@ public unsafe partial class Byml : SafeHandle
     public Byml(Hash value) : base(HashCOM(value.handle), true) { }
 
     public static implicit operator Byml(Array value) => new(value);
-    public Byml(Array value) : base(ArrayCOM(value.handle), true) { }
+    public Byml(Array value) : base(ArrayCOM(value), true) { }
 
     public static implicit operator Byml(string value) => new(value);
     public Byml(string value) : base(String(value), true) { }
