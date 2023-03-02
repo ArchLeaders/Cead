@@ -15,15 +15,8 @@ public partial class Byml
         [LibraryImport("Cead.lib")] private static partial void ArrayClear(IntPtr vector);
         [LibraryImport("Cead.lib")] private static partial int ArrayLength(IntPtr vector);
         [LibraryImport("Cead.lib")] private static partial Byml ArrayCurrent(IntPtr array, int index);
-
         [LibraryImport("Cead.lib")] private static partial IntPtr BuildEmptyArray();
-        [LibraryImport("Cead.lib")] private static partial IntPtr BuildArray(IntPtr* values, int values_len);
-
-        public static implicit operator IntPtr(Array array) => array.handle;
-        internal Array(IntPtr handle) : base(handle, true)
-        {
-            IsOwner = false;
-        }
+        [LibraryImport("Cead.lib")] private static partial IntPtr BuildArray(IntPtr* value, int value_len);
 
         public override bool IsInvalid { get; }
         public int Length => ArrayLength(handle);
@@ -40,17 +33,23 @@ public partial class Byml
         public void Remove(int index) => ArrayRemove(handle, index);
         public void Clear() => ArrayClear(handle);
 
-        public static implicit operator Array(Byml[] value) => new(value);
-        public Array(params Byml[] array) : base(BuildArray(array.AsSpan()), true) { }
-
-        public static implicit operator Array(Span<Byml> value) => new(value);
-        internal Array(Span<Byml> array) : base(BuildArray(array), true) { }
-
         public Array() : base(BuildEmptyArray(), true) { }
 
-        private static IntPtr BuildArray(Span<Byml> value)
+        public static implicit operator Array(Byml[] value) => new(value);
+        public Array(params Byml[] value) : base(BuildEmptyArray(), true)
         {
+            for (int i = 0; i < value.Length; i++) {
+                ArrayAdd(handle, value[i]);
+            }
+        }
 
+        public static implicit operator Array(IntPtr[] value) => new(value);
+        public Array(params IntPtr[] array) : base(BuildArray(array), true) { }
+        private static IntPtr BuildArray(IntPtr[] value)
+        {
+            fixed(IntPtr* ptr = value) {
+                return BuildArray(ptr, value.Length);
+            }
         }
 
         public Enumerator GetEnumerator() => new(handle, Length);

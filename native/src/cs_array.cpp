@@ -32,6 +32,29 @@ Byml::Array* BuildEmptyArray() {
     return new Byml::Array{};
 }
 
-Byml::Array* BuildArray(Byml** values, u32 values_len) {
-    return new auto{Byml::Array{*values, *values + values_len}};
+Byml::Array* BuildArray(Byml** value, u32 value_len) {
+    Byml::Array* byml_array = new Byml::Array(value_len);
+    Byml* ptr = byml_array->data();
+    for (size_t i = 0; i < value_len; i++) {
+        *ptr = **value;
+        ++ptr;
+        ++value;
+    }
+
+    return byml_array;
 }
+
+// Byml::Array* BuildArray(Byml** value, u32 value_len) {
+//     try {
+//         for (size_t i = 0; i < value_len; i++) {
+//             std::cout << "[c++] " << value[i]->GetString() << std::endl;
+//         }
+//
+//         std::cout << "[c++] " << (*(value + value_len - 1))->GetString() << std::endl;
+//         return new Byml::Array{*value, *(value + value_len - 1)};
+//     } catch (const std::exception& exc) {
+//         std::cerr << "[c++] " << exc.what() << std::endl;
+//     }
+//
+//     return new Byml::Array{};
+// `}

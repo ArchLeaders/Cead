@@ -41,7 +41,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport("Cead.lib")] private static partial double GetDouble(IntPtr byml);
 
     [LibraryImport("Cead.lib", EntryPoint = "Hash")] private static partial IntPtr HashCOM(IntPtr value);
-    [LibraryImport("Cead.lib", EntryPoint = "Array")] private static partial IntPtr ArrayCOM(IntPtr value);
+    [LibraryImport("Cead.lib", EntryPoint = "Array")] private static partial IntPtr ArrayCOM(Array value);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial IntPtr String(string value);
     [LibraryImport("Cead.lib")] private static partial IntPtr Binary(byte* value, int value_len);
     [LibraryImport("Cead.lib")] private static partial IntPtr Bool([MarshalAs(UnmanagedType.Bool)] bool value);
