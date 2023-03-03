@@ -24,6 +24,12 @@ add_library(Cead SHARED
     ./src/cs_byml.cpp
     ./src/include/cs_hash.h
     ./src/cs_hash.cpp
+
+    ./src/include/cs_sarc.h
+    ./src/cs_sarc.cpp
+
+    ./src/include/cs_aamp.h
+    ./src/cs_aamp.cpp
 )
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/oead)
