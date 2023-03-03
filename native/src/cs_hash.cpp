@@ -53,14 +53,14 @@ auto* HashBegin(Byml::Hash* hash) {
 }
 
 Byml::Hash* BuildEmptyHash() {
-    return new auto{Byml::Hash{}};
+    return new Byml::Hash{};
 }
 
 Byml::Hash* BuildHash(char*** keys, Byml** values, u32 values_len) {
-    Byml::Hash hash{};
+    Byml::Hash* hash{};
     for (size_t i = 0; i < values_len; i++) {
-        hash.insert({(*keys)[i], (*values)[i]});
+        hash->insert({(*keys)[i], (*values)[i]});
     }
 
-    return new auto{hash};
+    return hash;
 }
