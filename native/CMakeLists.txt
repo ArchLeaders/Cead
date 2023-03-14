@@ -27,6 +27,8 @@ add_library(Cead SHARED
 
     ./src/include/cs_sarc.h
     ./src/cs_sarc.cpp
+    ./src/include/cs_sarc_file.h
+    ./src/cs_sarc_file.cpp
 
     ./src/include/cs_aamp.h
     ./src/cs_aamp.cpp
