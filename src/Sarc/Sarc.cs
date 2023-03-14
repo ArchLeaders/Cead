@@ -102,6 +102,10 @@ public unsafe partial class Sarc : SafeHandle
             PtrHandle.FreePtr(handle);
         }
 
+        if (_writer != null) {
+            PtrHandle.FreePtr((nint)_writer);
+        }
+
         return true;
     }
 }
