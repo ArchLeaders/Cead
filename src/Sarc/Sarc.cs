@@ -1,4 +1,6 @@
-﻿using Cead.Interop;
+﻿#pragma warning disable CA1419 // Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
+
+using Cead.Interop;
 using System.Runtime.InteropServices;
 
 namespace Cead;
@@ -30,6 +32,7 @@ public unsafe partial class Sarc : SafeHandle
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void RemoveSarcFile(IntPtr writer, string name);
     [LibraryImport("Cead.lib")] internal static partial void ClearSarcFiles(IntPtr writer);
 
+    internal Sarc() : base(IntPtr.Zero, true) { }
     public Sarc(IntPtr handle) : base(handle, true) { }
     public Sarc(Endianess endian = Endianess.Little, Mode mode = Mode.New) : base(-1, true)
     {
