@@ -51,10 +51,14 @@ void SetWriterMode(SarcWriter* writer, SarcWriter::Mode mode) {
 }
 
 bool SarcWriterGet(SarcWriter* writer, char* name, u8** dst, u32* dst_len) {
-    auto vec = writer->m_files.at(name);
-    *dst = vec.data();
-    *dst_len = vec.size();
-    return true;
+    if (writer->m_files.contains(name)) {
+        auto vec = writer->m_files.at(name);
+        *dst = vec.data();
+        *dst_len = vec.size();
+        return true;
+    }
+
+    return false;
 }
 
 void AddSarcFile(SarcWriter* writer, char* name, u8* src, u32 src_len) {
