@@ -30,8 +30,8 @@ void SetEndianess(SarcWriter* writer, util::Endianness endianess) {
 bool GetFile(Sarc* sarc, char* name, const u8** dst, u32* dst_len) {
     auto file = sarc->GetFile(name);
     if (file.has_value()) {
-        *dst = file.emplace().data.data();
-        *dst_len = file.emplace().data.size();
+        *dst = file.value().data.data();
+        *dst_len = file.value().data.size();
         return true;
     }
 
