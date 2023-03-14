@@ -23,8 +23,8 @@ public enum BymlType : int
 
 public unsafe partial class Byml : SafeHandle
 {
-    [LibraryImport("Cead.lib")] private static partial Byml FromBinary(byte* src, int src_len);
-    [LibraryImport("Cead.lib")] private static partial PtrHandle ToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
+    [LibraryImport("Cead.lib")] private static partial Byml BymlFromBinary(byte* src, int src_len);
+    [LibraryImport("Cead.lib")] private static partial PtrHandle BymlToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] public static partial Byml FromTextCOM(string src);
     [LibraryImport("Cead.lib")] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] private static partial BymlType GetType(IntPtr byml);
@@ -62,7 +62,7 @@ public unsafe partial class Byml : SafeHandle
     public static Byml FromBinary(ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
-            Byml byml = FromBinary(ptr, data.Length);
+            Byml byml = BymlFromBinary(ptr, data.Length);
             byml.IsRoot = true;
             return byml;
         }
@@ -77,14 +77,14 @@ public unsafe partial class Byml : SafeHandle
 
     public PtrHandle ToBinary(out Span<byte> data, bool bigEndian, int version = 2)
     {
-        PtrHandle ptrHandle = ToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
+        PtrHandle ptrHandle = BymlToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
         data = new(ptr, dstLen);
         return ptrHandle;
     }
 
     public void ToBinary(string file, bool bigEndian, int version = 2)
     {
-        using PtrHandle ptrHandle = ToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
+        using PtrHandle ptrHandle = BymlToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
         using FileStream fs = File.Create(file);
         Span<byte> data = new(ptr, dstLen);
         fs.Write(data);
@@ -92,7 +92,7 @@ public unsafe partial class Byml : SafeHandle
 
     public byte[] ToBinary(bool bigEndian, int version = 2)
     {
-        using PtrHandle ptrHandle = ToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
+        using PtrHandle ptrHandle = BymlToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
         return new Span<byte>(ptr, dstLen).ToArray();
     }
 

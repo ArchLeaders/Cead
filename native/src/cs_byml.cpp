@@ -1,6 +1,6 @@
 #include "include/cs_byml.h"
 
-Byml* FromBinary(const u8* src, u32 src_len) {
+Byml* BymlFromBinary(const u8* src, u32 src_len) {
     auto* result = new auto{Byml::FromBinary({src, src_len})};
     return result;
 }
@@ -10,7 +10,7 @@ Byml* FromText(const char* src) {
     return result;
 }
 
-void* ToBinary(Byml* byml, u8** dst, u32* dst_len, bool big_endian, int version) {
+void* BymlToBinary(Byml* byml, u8** dst, u32* dst_len, bool big_endian, int version) {
     auto* result = new auto{byml->ToBinary(big_endian, version)};
     *dst = result->data();
     *dst_len = result->size();
