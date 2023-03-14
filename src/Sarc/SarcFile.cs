@@ -7,28 +7,28 @@ namespace Cead;
 /// </summary>
 public readonly unsafe partial struct SarcFile
 {
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial string GetName(IntPtr sarc_file);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void SetName(IntPtr sarc_file, string name);
-    [LibraryImport("Cead.lib")] internal static partial void GetData(IntPtr sarc_file, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib")] internal static partial void SetData(IntPtr sarc_file, byte* src, int src_len);
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial string GetSarcFileName(IntPtr sarc_file);
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void SetSarcFileName(IntPtr sarc_file, string name);
+    [LibraryImport("Cead.lib")] internal static partial void GetSarcFileData(IntPtr sarc_file, out byte* dst, out int dst_len);
+    [LibraryImport("Cead.lib")] internal static partial void SetSarcFileData(IntPtr sarc_file, byte* src, int src_len);
 
     private readonly IntPtr _handle;
 
     public string Name {
-        get => GetName(_handle);
-        set => SetName(_handle, value);
+        get => GetSarcFileName(_handle);
+        set => SetSarcFileName(_handle, value);
     }
 
     public Span<byte> GetData()
     {
-        GetData(_handle, out byte* dst, out int len);
+        GetSarcFileData(_handle, out byte* dst, out int len);
         return new(dst, len);
     }
 
     public void SetData(Span<byte> data)
     {
         fixed(byte* ptr = data) {
-            SetData(_handle, ptr, data.Length);
+            SetSarcFileData(_handle, ptr, data.Length);
         }
     }
 

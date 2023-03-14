@@ -15,19 +15,17 @@ public enum Mode
 
 public unsafe partial class Sarc : SafeHandle
 {
-    [LibraryImport("Cead.lib")] internal static partial Sarc FromBinary(byte* src, int src_len);
-    [LibraryImport("Cead.lib")] internal static partial void ToBinary(IntPtr writer, out PtrHandle handle, out byte* dst, out int dst_len);
+    [LibraryImport("Cead.lib")] internal static partial Sarc SarcFromBinary(byte* src, int src_len);
+    [LibraryImport("Cead.lib")] internal static partial void SarcToBinary(IntPtr writer, out PtrHandle handle, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] internal static partial int GetNumFiles(IntPtr sarc);
     [LibraryImport("Cead.lib")] internal static partial int GetFileMapCount(IntPtr writer);
     [LibraryImport("Cead.lib")] internal static partial Endianess GetEndianess(IntPtr sarc);
     [LibraryImport("Cead.lib")] internal static partial Endianess SetEndianess(IntPtr writer, Endianess endianess);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial IntPtr GetFile(IntPtr sarc, string name);
-    [LibraryImport("Cead.lib")] internal static partial IntPtr GetFileAt(IntPtr sarc, int index);
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool GetFile(IntPtr sarc, string name, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] internal static partial IntPtr NewSarcWriter(Endianess endian, Mode mode);
     [LibraryImport("Cead.lib")] internal static partial IntPtr GetSarcWriter(IntPtr sarc);
     [LibraryImport("Cead.lib")] internal static partial void SetWriterMode(IntPtr writer, Mode mode);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial IntPtr SarcWriterGet(IntPtr writer, string name);
-    [LibraryImport("Cead.lib")] internal static partial IntPtr SarcWriterGetAt(IntPtr writer, int index);
+    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool SarcWriterGet(IntPtr writer, string name, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void AddSarcFile(IntPtr writer, string name, byte* src, int src_len);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void RemoveSarcFile(IntPtr writer, string name);
     [LibraryImport("Cead.lib")] internal static partial void ClearSarcFiles(IntPtr writer);
@@ -38,24 +36,27 @@ public unsafe partial class Sarc : SafeHandle
         _writer = NewSarcWriter(endian, mode);
     }
 
-    public SarcFile this[int index] {
-        get => _writer != null ? SarcWriterGetAt((nint)_writer, index) : GetFileAt(handle, index);
-    }
+    public Span<byte> this[string key] {
+        get {
+            bool success = _writer != null ? SarcWriterGet((nint)_writer, key, out byte* ptr, out int len) : GetFile(handle, key, out ptr, out len);
+            if (!success) {
+                throw new KeyNotFoundException("Could not find a file with the name ''");
+            }
 
-    public SarcFile this[string key] {
-        get => _writer != null ? SarcWriterGet((nint)_writer, key) : GetFile(handle, key);
+            return new(ptr, len);
+        }
     }
 
     public static Sarc FromBinary(Span<byte> data)
     {
-        fixed(byte* ptr = data) {
-            return FromBinary(ptr, data.Length);
+        fixed (byte* ptr = data) {
+            return SarcFromBinary(ptr, data.Length);
         }
     }
 
     public Span<byte> ToBinary(out PtrHandle handle)
     {
-        ToBinary(Writer, out handle, out byte* dst, out int len);
+        SarcToBinary(Writer, out handle, out byte* dst, out int len);
         return new(dst, len);
     }
 
@@ -67,7 +68,7 @@ public unsafe partial class Sarc : SafeHandle
 
     public void Add(string name, Span<byte> data)
     {
-        fixed(byte* ptr = data) {
+        fixed (byte* ptr = data) {
             AddSarcFile(Writer, name, ptr, data.Length);
         }
     }
