@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Cead;
 
-public enum Endianess
+public enum Endianness
 {
     Big, Little
 }
@@ -21,10 +21,10 @@ public unsafe partial class Sarc : SafeHandle
     [LibraryImport("Cead.lib")] internal static partial void SarcToBinary(IntPtr writer, out PtrHandle handle, out byte* dst, out int dst_len);
     [LibraryImport("Cead.lib")] internal static partial int GetNumFiles(IntPtr sarc);
     [LibraryImport("Cead.lib")] internal static partial int GetFileMapCount(IntPtr writer);
-    [LibraryImport("Cead.lib")] internal static partial Endianess GetEndianess(IntPtr sarc);
-    [LibraryImport("Cead.lib")] internal static partial Endianess SetEndianess(IntPtr writer, Endianess endianess);
+    [LibraryImport("Cead.lib")] internal static partial Endianness GetEndianness(IntPtr sarc);
+    [LibraryImport("Cead.lib")] internal static partial Endianness SetEndianness(IntPtr writer, Endianness endianess);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool GetFile(IntPtr sarc, string name, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib")] internal static partial IntPtr NewSarcWriter(Endianess endian, Mode mode);
+    [LibraryImport("Cead.lib")] internal static partial IntPtr NewSarcWriter(Endianness endian, Mode mode);
     [LibraryImport("Cead.lib")] internal static partial IntPtr GetSarcWriter(IntPtr sarc);
     [LibraryImport("Cead.lib")] internal static partial void SetWriterMode(IntPtr writer, Mode mode);
     [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool SarcWriterGet(IntPtr writer, string name, out byte* dst, out int dst_len);
@@ -34,7 +34,7 @@ public unsafe partial class Sarc : SafeHandle
 
     internal Sarc() : base(IntPtr.Zero, true) { }
     public Sarc(IntPtr handle) : base(handle, true) { }
-    public Sarc(Endianess endian = Endianess.Little, Mode mode = Mode.New) : base(-1, true)
+    public Sarc(Endianness endian = Endianness.Little, Mode mode = Mode.New) : base(-1, true)
     {
         _writer = NewSarcWriter(endian, mode);
     }
@@ -64,9 +64,9 @@ public unsafe partial class Sarc : SafeHandle
     }
 
     public int Count => _writer != null ? GetFileMapCount((nint)_writer) : GetNumFiles(handle);
-    public Endianess Endian {
-        get => GetEndianess(handle);
-        set => SetEndianess(Writer, value);
+    public Endianness Endian {
+        get => GetEndianness(handle);
+        set => SetEndianness(Writer, value);
     }
 
     public void Add(string name, ReadOnlySpan<byte> data)

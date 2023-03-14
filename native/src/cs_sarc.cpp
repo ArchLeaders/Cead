@@ -19,11 +19,11 @@ u32 GetFileMapCount(SarcWriter* writer) {
     return writer->m_files.size();
 }
 
-util::Endianness GetEndianess(Sarc* sarc) {
+util::Endianness GetEndianness(Sarc* sarc) {
     return sarc->GetEndianness();
 }
 
-void SetEndianess(SarcWriter* writer, util::Endianness endianess) {
+void SetEndianness(SarcWriter* writer, util::Endianness endianess) {
     writer->SetEndianness(endianess);
 }
 
