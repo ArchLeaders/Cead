@@ -50,7 +50,7 @@ public unsafe partial class Sarc : SafeHandle
         }
     }
 
-    public static Sarc FromBinary(Span<byte> data)
+    public static Sarc FromBinary(ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
             return SarcFromBinary(ptr, data.Length);
@@ -69,7 +69,7 @@ public unsafe partial class Sarc : SafeHandle
         set => SetEndianess(Writer, value);
     }
 
-    public void Add(string name, Span<byte> data)
+    public void Add(string name, ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
             AddSarcFile(Writer, name, ptr, data.Length);
