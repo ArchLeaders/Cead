@@ -43,7 +43,7 @@ public unsafe partial class Sarc : SafeHandle
         get {
             bool success = _writer != null ? SarcWriterGet((nint)_writer, key, out byte* ptr, out int len) : GetFile(handle, key, out ptr, out len);
             if (!success) {
-                throw new KeyNotFoundException("Could not find a file with the name ''");
+                throw new KeyNotFoundException($"Could not find a file with the name '{key}'");
             }
 
             return new(ptr, len);
