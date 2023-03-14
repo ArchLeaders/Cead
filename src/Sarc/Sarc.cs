@@ -50,6 +50,7 @@ public unsafe partial class Sarc : SafeHandle
         }
     }
 
+    public static Sarc FromBinary(byte[] data) => FromBinary(data.AsSpan());
     public static Sarc FromBinary(ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
@@ -69,6 +70,7 @@ public unsafe partial class Sarc : SafeHandle
         set => SetEndianness(Writer, value);
     }
 
+    public void Add(string name, byte[] data) => Add(name, data.AsSpan());
     public void Add(string name, ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
