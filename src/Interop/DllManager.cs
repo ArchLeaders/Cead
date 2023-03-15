@@ -11,7 +11,7 @@ public static class DllManager
     [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
     private static extern IntPtr SetDllDirectory(string lpFileName);
 
-    public static void Load()
+    public static void LoadCead()
     {
         if (_isLoaded) {
             return;
