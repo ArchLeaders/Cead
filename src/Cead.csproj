@@ -12,12 +12,9 @@
     <None Remove="Lib\Cead.dll" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(RuntimeIdentifier)' != 'linux-x64'">
-	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
-	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" />
+  <ItemGroup>
+	  <EmbeddedResource Condition="'$(RuntimeIdentifier)' == 'linux-x64'" Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" />
+	  <EmbeddedResource Condition="'$(RuntimeIdentifier)' != 'linux-x64'" Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" />
   </ItemGroup>
 
 </Project>
