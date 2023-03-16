@@ -9,8 +9,6 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 if(WIN32)
     set(CMAKE_CXX_STANDARD_LIBRARIES "-static -static-libgcc -static-libstdc++")
-else()
-    set(CMAKE_CXX_STANDARD_LIBRARIES "-shared -static-libgcc -static-libstdc++")
 endif()
 
 include(CTest)
