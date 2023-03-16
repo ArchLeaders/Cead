@@ -5,14 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<DefineConstants Condition="'$(RuntimeIdentifier)' == 'linux-x64'">LINUX</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Lib\Cead.dll" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(RuntimeIdentifier)' != 'linux-x64'">
 	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" />
   </ItemGroup>
 
 </Project>

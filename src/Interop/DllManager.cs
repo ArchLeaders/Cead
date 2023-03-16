@@ -1,11 +1,20 @@
-﻿using System.Reflection;
+﻿global using static Cead.Interop.DllManager;
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Cead.Interop;
 
 public static class DllManager
 {
-    private static readonly string[] _libs = { "Cead.lib" };
+#if LINUX
+    public const string CeadLib = "Cead.so";
+#else
+    public const string CeadLib = "Cead.lib";
+#endif
+
+
+    private static readonly string[] _libs = { CeadLib };
     private static bool _isLoaded;
 
     public static void LoadCead()

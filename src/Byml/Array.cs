@@ -8,15 +8,15 @@ public partial class Byml
 {
     public unsafe partial class Array : SafeHandle
     {
-        [LibraryImport("Cead.lib")] private static partial Byml ArrayGet(IntPtr vector, int index);
-        [LibraryImport("Cead.lib")] private static partial void ArraySet(IntPtr vector, int index, Byml value);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(IntPtr hash, Byml value);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(IntPtr hash, int index);
-        [LibraryImport("Cead.lib")] private static partial void ArrayClear(IntPtr vector);
-        [LibraryImport("Cead.lib")] private static partial int ArrayLength(IntPtr vector);
-        [LibraryImport("Cead.lib")] private static partial Byml ArrayCurrent(IntPtr array, int index);
-        [LibraryImport("Cead.lib")] private static partial IntPtr BuildEmptyArray();
-        [LibraryImport("Cead.lib")] private static partial IntPtr BuildArray(IntPtr* value, int value_len);
+        [LibraryImport(CeadLib)] private static partial Byml ArrayGet(IntPtr vector, int index);
+        [LibraryImport(CeadLib)] private static partial void ArraySet(IntPtr vector, int index, Byml value);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(IntPtr hash, Byml value);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(IntPtr hash, int index);
+        [LibraryImport(CeadLib)] private static partial void ArrayClear(IntPtr vector);
+        [LibraryImport(CeadLib)] private static partial int ArrayLength(IntPtr vector);
+        [LibraryImport(CeadLib)] private static partial Byml ArrayCurrent(IntPtr array, int index);
+        [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyArray();
+        [LibraryImport(CeadLib)] private static partial IntPtr BuildArray(IntPtr* value, int value_len);
 
         public override bool IsInvalid { get; }
         public int Length => ArrayLength(handle);

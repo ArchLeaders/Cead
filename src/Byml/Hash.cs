@@ -7,17 +7,17 @@ public partial class Byml
 {
     public unsafe partial class Hash
     {
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial Byml HashGet(IntPtr hash, string key);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashSet(IntPtr hash, string key, Byml value);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashAdd(IntPtr hash, string key, Byml value);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial void HashRemove(IntPtr hash, string key);
-        [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashContains(IntPtr hash, string key);
-        [LibraryImport("Cead.lib")] private static partial void HashClear(IntPtr hash);
-        [LibraryImport("Cead.lib")] private static partial int HashLength(IntPtr hash);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial Byml HashGet(IntPtr hash, string key);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashSet(IntPtr hash, string key, Byml value);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashAdd(IntPtr hash, string key, Byml value);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashRemove(IntPtr hash, string key);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashContains(IntPtr hash, string key);
+        [LibraryImport(CeadLib)] private static partial void HashClear(IntPtr hash);
+        [LibraryImport(CeadLib)] private static partial int HashLength(IntPtr hash);
 
-        [LibraryImport("Cead.lib")] private static partial void HashCurrent(IntPtr iterator, out IntPtr key, out Byml value);
-        [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
-        [LibraryImport("Cead.lib")] private static partial IntPtr HashBegin(IntPtr hash);
+        [LibraryImport(CeadLib)] private static partial void HashCurrent(IntPtr iterator, out IntPtr key, out Byml value);
+        [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
+        [LibraryImport(CeadLib)] private static partial IntPtr HashBegin(IntPtr hash);
 
         internal readonly IntPtr handle = IntPtr.Zero;
 

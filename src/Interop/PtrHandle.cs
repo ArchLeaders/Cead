@@ -4,7 +4,7 @@ namespace Cead.Interop;
 
 public partial class PtrHandle : SafeHandle
 {
-    [LibraryImport("Cead.lib")]
+    [LibraryImport(CeadLib)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static unsafe partial bool FreePtr(IntPtr ptr);
 

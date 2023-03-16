@@ -23,34 +23,34 @@ public enum BymlType : int
 
 public unsafe partial class Byml : SafeHandle
 {
-    [LibraryImport("Cead.lib")] private static partial Byml BymlFromBinary(byte* src, int src_len);
-    [LibraryImport("Cead.lib")] private static partial PtrHandle BymlToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] public static partial Byml FromTextCOM(string src);
-    [LibraryImport("Cead.lib")] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib")] private static partial BymlType GetType(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial IntPtr GetHash(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial Array GetArray(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial IntPtr GetString(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial PtrHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib")][return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetBool(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial int GetInt(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial uint GetUInt(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial float GetFloat(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial long GetInt64(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial ulong GetUInt64(IntPtr byml);
-    [LibraryImport("Cead.lib")] private static partial double GetDouble(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial Byml BymlFromBinary(byte* src, int src_len);
+    [LibraryImport(CeadLib)] private static partial PtrHandle BymlToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] public static partial Byml FromTextCOM(string src);
+    [LibraryImport(CeadLib)] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)] private static partial BymlType GetType(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial IntPtr GetHash(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial Array GetArray(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial IntPtr GetString(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial PtrHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetBool(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial int GetInt(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial uint GetUInt(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial float GetFloat(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial long GetInt64(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial ulong GetUInt64(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial double GetDouble(IntPtr byml);
 
-    [LibraryImport("Cead.lib", EntryPoint = "Hash")] private static partial IntPtr HashCOM(IntPtr value);
-    [LibraryImport("Cead.lib", EntryPoint = "Array")] private static partial IntPtr ArrayCOM(Array value);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] private static partial IntPtr String(string value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr Binary(byte* value, int value_len);
-    [LibraryImport("Cead.lib")] private static partial IntPtr Bool([MarshalAs(UnmanagedType.Bool)] bool value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr Int(int value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr UInt(uint value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr Float(float value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr Int64(long value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr UInt64(ulong value);
-    [LibraryImport("Cead.lib")] private static partial IntPtr Double(double value);
+    [LibraryImport(CeadLib, EntryPoint = "Hash")] private static partial IntPtr HashCOM(IntPtr value);
+    [LibraryImport(CeadLib, EntryPoint = "Array")] private static partial IntPtr ArrayCOM(Array value);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial IntPtr String(string value);
+    [LibraryImport(CeadLib)] private static partial IntPtr Binary(byte* value, int value_len);
+    [LibraryImport(CeadLib)] private static partial IntPtr Bool([MarshalAs(UnmanagedType.Bool)] bool value);
+    [LibraryImport(CeadLib)] private static partial IntPtr Int(int value);
+    [LibraryImport(CeadLib)] private static partial IntPtr UInt(uint value);
+    [LibraryImport(CeadLib)] private static partial IntPtr Float(float value);
+    [LibraryImport(CeadLib)] private static partial IntPtr Int64(long value);
+    [LibraryImport(CeadLib)] private static partial IntPtr UInt64(ulong value);
+    [LibraryImport(CeadLib)] private static partial IntPtr Double(double value);
 
     public static implicit operator IntPtr(Byml byml) => byml.handle;
     internal Byml() : base(IntPtr.Zero, true) { }

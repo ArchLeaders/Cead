@@ -6,8 +6,8 @@ namespace Cead;
 
 public static unsafe partial class Yaz0
 {
-    [LibraryImport("Cead.lib")] internal static partial void Compress(byte* src, int src_len, out PtrHandle dst_handle, out byte* dst, out int dst_len, uint data_alignment, int level);
-    [LibraryImport("Cead.lib")] internal static partial void Decompress(byte* src, int src_len, byte* dst, int dst_len);
+    [LibraryImport(CeadLib)] internal static partial void Compress(byte* src, int src_len, out PtrHandle dst_handle, out byte* dst, out int dst_len, uint data_alignment, int level);
+    [LibraryImport(CeadLib)] internal static partial void Decompress(byte* src, int src_len, byte* dst, int dst_len);
 
     public static Span<byte> Compress(string file, out PtrHandle handle, int level = 7) => Compress(File.ReadAllBytes(file), out handle, level);
     public static Span<byte> Compress(ReadOnlySpan<byte> src, out PtrHandle handle, int level = 7)

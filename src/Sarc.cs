@@ -17,20 +17,20 @@ public enum Mode
 
 public unsafe partial class Sarc : SafeHandle
 {
-    [LibraryImport("Cead.lib")] internal static partial Sarc SarcFromBinary(byte* src, int src_len);
-    [LibraryImport("Cead.lib")] internal static partial void SarcToBinary(IntPtr writer, out PtrHandle handle, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib")] internal static partial int GetNumFiles(IntPtr sarc);
-    [LibraryImport("Cead.lib")] internal static partial int GetFileMapCount(IntPtr writer);
-    [LibraryImport("Cead.lib")] internal static partial Endianness GetEndianness(IntPtr sarc);
-    [LibraryImport("Cead.lib")] internal static partial Endianness SetEndianness(IntPtr writer, Endianness endianess);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool GetFile(IntPtr sarc, string name, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib")] internal static partial IntPtr NewSarcWriter(Endianness endian, Mode mode);
-    [LibraryImport("Cead.lib")] internal static partial IntPtr GetSarcWriter(IntPtr sarc);
-    [LibraryImport("Cead.lib")] internal static partial void SetWriterMode(IntPtr writer, Mode mode);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool SarcWriterGet(IntPtr writer, string name, out byte* dst, out int dst_len);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void AddSarcFile(IntPtr writer, string name, byte* src, int src_len);
-    [LibraryImport("Cead.lib", StringMarshalling = StringMarshalling.Utf8)] internal static partial void RemoveSarcFile(IntPtr writer, string name);
-    [LibraryImport("Cead.lib")] internal static partial void ClearSarcFiles(IntPtr writer);
+    [LibraryImport(CeadLib)] internal static partial Sarc SarcFromBinary(byte* src, int src_len);
+    [LibraryImport(CeadLib)] internal static partial void SarcToBinary(IntPtr writer, out PtrHandle handle, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)] internal static partial int GetNumFiles(IntPtr sarc);
+    [LibraryImport(CeadLib)] internal static partial int GetFileMapCount(IntPtr writer);
+    [LibraryImport(CeadLib)] internal static partial Endianness GetEndianness(IntPtr sarc);
+    [LibraryImport(CeadLib)] internal static partial Endianness SetEndianness(IntPtr writer, Endianness endianess);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool GetFile(IntPtr sarc, string name, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)] internal static partial IntPtr NewSarcWriter(Endianness endian, Mode mode);
+    [LibraryImport(CeadLib)] internal static partial IntPtr GetSarcWriter(IntPtr sarc);
+    [LibraryImport(CeadLib)] internal static partial void SetWriterMode(IntPtr writer, Mode mode);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool SarcWriterGet(IntPtr writer, string name, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] internal static partial void AddSarcFile(IntPtr writer, string name, byte* src, int src_len);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] internal static partial void RemoveSarcFile(IntPtr writer, string name);
+    [LibraryImport(CeadLib)] internal static partial void ClearSarcFiles(IntPtr writer);
 
     internal Sarc() : base(IntPtr.Zero, true) { }
     public Sarc(IntPtr handle) : base(handle, true) { }
