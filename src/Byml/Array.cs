@@ -6,7 +6,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Array : SafeHandle, IBymlObject
+    public unsafe partial class Array : SafeHandle
     {
         [LibraryImport("Cead.lib")] private static partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport("Cead.lib")] private static partial void ArraySet(IntPtr vector, int index, Byml value);
