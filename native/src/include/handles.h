@@ -1,11 +1,8 @@
 #pragma once
-#define CEAD __declspec(dllexport)
 
-#include <oead/byml.h>
-#include <oead/types.h>
+#include <cead.h>
 
-#include <string>
-#include <vector>
+#include <cstdlib>
 
 extern "C" {
 

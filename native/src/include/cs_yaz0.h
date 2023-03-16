@@ -1,12 +1,12 @@
 #pragma once
-#define CS_YAZ0 __declspec(dllexport)
 
+#include <cead.h>
 #include <oead/yaz0.h>
 
 extern "C" {
 
 using namespace oead;
 
-void CS_YAZ0 Compress(const u8* src, u32 src_len, void** dst_handle, u8** dst, u32* dst_len, u32 data_alignment, int level);
-void CS_YAZ0 Decompress(const u8* src, u32 src_len, u8* dst, u32 dst_len);
+CEAD void Compress(const u8* src, u32 src_len, void** dst_handle, u8** dst, u32* dst_len, u32 data_alignment, int level);
+CEAD void Decompress(const u8* src, u32 src_len, u8* dst, u32 dst_len);
 }

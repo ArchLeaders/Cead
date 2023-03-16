@@ -1,6 +1,6 @@
 #pragma once
-#define CEAD __declspec(dllexport)
 
+#include <cead.h>
 #include <oead/byml.h>
 
 #include <algorithm>
