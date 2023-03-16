@@ -6,12 +6,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
-set(CMAKE_CXX_STANDARD_LIBRARIES "-static -static-libgcc -static-libstdc++")
+
+if(WIN32)
+    set(CMAKE_CXX_STANDARD_LIBRARIES "-static -static-libgcc -static-libstdc++")
+else()
+    set(CMAKE_CXX_STANDARD_LIBRARIES "-shared -static-libgcc -static-libstdc++")
+endif()
 
 include(CTest)
 enable_testing()
 
 add_library(Cead SHARED
+    ./src/include/cead.h
+
     ./src/include/handles.h
     ./src/handles.cpp
 
@@ -34,6 +41,7 @@ add_library(Cead SHARED
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/oead)
 target_link_libraries(Cead PRIVATE oead)
+target_include_directories(Cead PRIVATE ./src/include)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
