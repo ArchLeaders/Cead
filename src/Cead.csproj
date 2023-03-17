@@ -5,7 +5,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<DefineConstants Condition="'$(RuntimeIdentifier)' == 'linux-x64'">LINUX</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
