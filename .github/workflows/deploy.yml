@@ -1,0 +1,119 @@
+name: Deploy
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Linux
+            os: ubuntu-latest
+            ext: .so
+            runtime: linux-x64
+            build: linux
+            msbuild_flags: -p:DefineConstants=LINUX
+            vars: CXX="g++"
+            setup: |
+              sudo apt-get update
+              sudo apt-get install ninja-build cmake
+              ninja --version
+              cmake --version
+              gcc --version
+          - name: Windows
+            os: windows-latest
+            ext: .dll
+            runtime: win-x64
+            setup: |
+              choco install ninja cmake
+              ninja --version
+              cmake --version
+
+    env:
+      proj: "Cead"
+      nuget: "https://api.nuget.org/v3/index.json"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: ${{ matrix.config.setup }}
+
+      - name: Configure (CMake)
+        shell: bash
+        run: |
+          mkdir ./lib/Cead/native/build
+          ${{ matrix.config.vars }} \
+          cmake --no-warn-unused-cli \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+            -DCMAKE_BUILD_TYPE:STRING=Release \
+            -S ./lib/Cead/native \
+            -B ./lib/Cead/native/build/${{ matrix.config.build }} \
+            -G "Ninja"
+
+      - name: Build (CMake)
+        shell: bash
+        run: |
+          cmake --build ./lib/Cead/native/build/${{ matrix.config.build }} --config Release --target all -j 4
+
+      - name: Install DotNET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: Restore Cead
+        shell: bash
+        run: |
+          dotnet restore src/${{ env.csproj }}.csproj
+
+      - name: Build Cead
+        shell: bash
+        run: |
+          dotnet build src/${{ env.csproj }}.csproj \
+          --no-restore \
+          -c Release \
+          -p:Version=${{ steps.version.outputs.version-without-v }}
+
+      - name: Package Cead
+        shell: bash
+        run: |
+          dotnet pack src/${{ env.csproj }}.csproj \
+          --no-build \
+          --no-restore \
+          -c Release \
+          -p:PackageVersion=${{ github.event.release.tag_name }}
+          -o ${{ env.build }}
+
+      - name: Push Cead
+        shell: bash
+        run: |
+          dotnet nuget push ${{ env.build }}/*.nupkg \
+          -k ${{ secrets.nuget_auth }} \
+          -s ${{ env.nuget }}
+
+      - name: Publish Botw Mod Converter
+        shell: bash
+        run: |
+          dotnet publish src/${{ env.proj }}/${{ env.proj }}.csproj \
+          -r ${{ matrix.config.runtime }} \
+          -c Release \
+          --sc false \
+          -o ${{ matrix.config.name }} \
+          -p:PublishSingleFile=true \
+          -P:DebugType=embedded \
+          -p:IncludeNativeLibrariesForSelfExtract=true ${{ matrix.config.msbuild_flags }}
+
+      - name: Upload Cead Binaries
+        uses: Shopify/upload-to-release@v1.0.1
+        with:
+          name: ${{ env.proj }}${{ matrix.platform.ext }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ matrix.platform.name }}/${{ env.proj }}${{ matrix.platform.ext }}
