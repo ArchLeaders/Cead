@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<DefineConstants Condition="Exists('..\native\build\linux\Cead.so')">LINUX</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,9 +14,9 @@
 
   <ItemGroup>
 	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so"
-						Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
+						Condition="Exists('..\native\build\linux\Cead.so')" />
 	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib"
-						Condition="'$(RuntimeIdentifier)'!='linux-x64'" />
+						Condition="Exists('..\native\build\Cead.dll')" />
   </ItemGroup>
 
 </Project>
