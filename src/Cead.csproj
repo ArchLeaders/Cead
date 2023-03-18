@@ -13,8 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <EmbeddedResource Condition="'$(RuntimeIdentifier)' == 'linux-x64'" Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" />
-	  <EmbeddedResource Condition="'$(RuntimeIdentifier)' != 'linux-x64'" Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" />
+	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so"
+						Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
+	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib"
+						Condition="'$(RuntimeIdentifier)'!='linux-x64'" />
   </ItemGroup>
 
 </Project>
