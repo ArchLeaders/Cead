@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Cead;
 
@@ -15,7 +16,7 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial void HashClear(IntPtr hash);
         [LibraryImport(CeadLib)] private static partial int HashLength(IntPtr hash);
 
-        [LibraryImport(CeadLib)] private static partial void HashCurrent(IntPtr iterator, out IntPtr key, out Byml value);
+        [LibraryImport(CeadLib)] private static partial void HashCurrent(IntPtr iterator, out byte* key, out Byml value);
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
 
         internal readonly IntPtr handle = IntPtr.Zero;
@@ -58,8 +59,8 @@ public partial class Byml
             public KeyValuePair<string, Byml> Current {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get {
-                    HashCurrent(_iterator, out IntPtr keyPtr, out Byml value);
-                    return new(Marshal.PtrToStringUTF8(keyPtr)!, value);
+                    HashCurrent(_iterator, out byte* keyPtr, out Byml value);
+                    return new(Utf8StringMarshaller.ConvertToManaged(keyPtr)!, value);
                 }
             }
         }
