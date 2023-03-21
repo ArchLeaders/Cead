@@ -72,3 +72,28 @@ void RemoveSarcFile(SarcWriter* writer, char* name) {
 void ClearSarcFiles(SarcWriter* writer) {
     writer->m_files.clear();
 }
+
+void SarcCurrent(SarcWriter::FileMap::iterator* iterator, const char** key, u8** dst, u32* dst_len) {
+    auto it = *iterator;
+    *key = it->first.c_str();
+    *dst = it->second.data();
+    *dst_len = it->second.size();
+}
+
+bool SarcAdvance(SarcWriter* writer, SarcWriter::FileMap::iterator* iterator, SarcWriter::FileMap::iterator** next) {
+    if (writer->m_files.size() <= 0) {
+        return false;
+    }
+
+    if (iterator == NULL) {
+        *next = new auto{writer->m_files.begin()};
+        return true;
+    }
+
+    if (++(*iterator) != writer->m_files.end()) {
+        *next = iterator;
+        return true;
+    }
+
+    return false;
+}

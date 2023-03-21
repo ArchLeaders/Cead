@@ -1,7 +1,9 @@
 ﻿#pragma warning disable CA1419 // Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
 
 using Cead.Interop;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Cead;
 
@@ -31,6 +33,9 @@ public unsafe partial class Sarc : SafeHandle
     [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] internal static partial void AddSarcFile(IntPtr writer, string name, byte* src, int src_len);
     [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] internal static partial void RemoveSarcFile(IntPtr writer, string name);
     [LibraryImport(CeadLib)] internal static partial void ClearSarcFiles(IntPtr writer);
+
+    [LibraryImport(CeadLib)] internal static partial void SarcCurrent(IntPtr iterator, out byte* key_ptr, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] internal static partial bool SarcAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
 
     internal Sarc() : base(IntPtr.Zero, true) { }
     public Sarc(IntPtr handle) : base(handle, true) { }
@@ -86,6 +91,53 @@ public unsafe partial class Sarc : SafeHandle
     public void Clear()
     {
         ClearSarcFiles(Writer);
+    }
+
+    /// <summary>Gets an enumerator for this span.</summary>
+    public Enumerator GetEnumerator() => new(Writer);
+
+    /// <summary>Enumerates the elements of a <see cref="Span{T}"/>.</summary>
+    public ref struct Enumerator
+    {
+        private readonly IntPtr _writer;
+        private IntPtr _iterator;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal Enumerator(IntPtr writer)
+        {
+            _writer = writer;
+            _iterator = IntPtr.Zero;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool MoveNext() => SarcAdvance(_writer, _iterator, out _iterator);
+
+        /// <summary>Gets the element at the current position of the enumerator.</summary>
+        public KeyValuePair<string, SarcFile> Current {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get {
+                SarcCurrent(_iterator, out byte* keyPtr, out byte* dst, out int dstLen);
+                return new(Utf8StringMarshaller.ConvertToManaged(keyPtr)!, new(dst, dstLen));
+            }
+        }
+    }
+
+    public readonly struct SarcFile
+    {
+        private readonly byte* _ptr;
+        private readonly int _len;
+
+        public SarcFile(byte* ptr, int len)
+        {
+            _ptr = ptr;
+            _len = len;
+        }
+
+        public static implicit operator Span<byte>(SarcFile sarcFile) => sarcFile.AsSpan();
+        public Span<byte> AsSpan()
+        {
+            return new(_ptr, _len);
+        }
     }
 
     private IntPtr? _writer;
