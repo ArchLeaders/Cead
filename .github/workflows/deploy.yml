@@ -106,10 +106,7 @@ jobs:
           -c Release \
           --sc false \
           -o ${{ matrix.config.name }} \
-          -p:PublishSingleFile=true \
-          -P:DebugType=embedded \
-          -p:PublishTrimmed=true \
-          -p:IncludeNativeLibrariesForSelfExtract=true ${{ matrix.config.msbuild_flags }}
+          -p:DebugType=embedded
 
       - name: Upload Cead Binaries
         uses: Shopify/upload-to-release@v1.0.1

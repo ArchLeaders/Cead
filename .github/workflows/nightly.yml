@@ -74,9 +74,7 @@ jobs:
           -c Release \
           --sc false \
           -o ${{ matrix.config.name }} \
-          -p:PublishSingleFile=true \
-          -p:PublishTrimmed=true \
-          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=embedded
 
       - uses: actions/upload-artifact@v3
         name: Upload artifacts
