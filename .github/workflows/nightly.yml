@@ -47,19 +47,19 @@ jobs:
       - name: Configure (CMake)
         shell: bash
         run: |
-          mkdir ./lib/Cead/native/build
+          mkdir ./native/build
           ${{ matrix.config.vars }} \
           cmake --no-warn-unused-cli \
             -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
             -DCMAKE_BUILD_TYPE:STRING=Release \
-            -S ./lib/Cead/native \
-            -B ./lib/Cead/native/build/${{ matrix.config.build }} \
+            -S ./native \
+            -B ./native/build/${{ matrix.config.build }} \
             -G "Ninja"
 
       - name: Build (CMake)
         shell: bash
         run: |
-          cmake --build ./lib/Cead/native/build/${{ matrix.config.build }} --config Release --target all -j 4
+          cmake --build ./native/build/${{ matrix.config.build }} --config Release --target all -j 4
 
       - name: Install DotNET
         uses: actions/setup-dotnet@v3
