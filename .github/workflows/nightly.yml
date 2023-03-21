@@ -1,8 +1,8 @@
-name: Deploy
+name: Nightly
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [master]
 
 jobs:
   build:
@@ -34,12 +34,10 @@ jobs:
               cmake --version
 
     env:
-      proj: "Cead"
-      nuget: "https://api.nuget.org/v3/index.json"
+      proj: Cead
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
+      - uses: actions/checkout@master
         with:
           submodules: recursive
 
@@ -68,36 +66,6 @@ jobs:
         with:
           dotnet-version: "7.0.x"
 
-      - name: Restore Cead
-        shell: bash
-        run: |
-          dotnet restore src/${{ env.csproj }}.csproj
-
-      - name: Build Cead
-        shell: bash
-        run: |
-          dotnet build src/${{ env.csproj }}.csproj \
-          --no-restore \
-          -c Release \
-          -p:Version=${{ steps.version.outputs.version-without-v }}
-
-      - name: Package Cead
-        shell: bash
-        run: |
-          dotnet pack src/${{ env.csproj }}.csproj \
-          --no-build \
-          --no-restore \
-          -c Release \
-          -p:PackageVersion=${{ github.event.release.tag_name }}
-          -o ${{ env.build }}
-
-      - name: Push Cead
-        shell: bash
-        run: |
-          dotnet nuget push ${{ env.build }}/*.nupkg \
-          -k ${{ secrets.nuget_auth }} \
-          -s ${{ env.nuget }}
-
       - name: Publish Cead
         shell: bash
         run: |
@@ -107,13 +75,11 @@ jobs:
           --sc false \
           -o ${{ matrix.config.name }} \
           -p:PublishSingleFile=true \
-          -P:DebugType=embedded \
           -p:PublishTrimmed=true \
-          -p:IncludeNativeLibrariesForSelfExtract=true ${{ matrix.config.msbuild_flags }}
+          -p:IncludeNativeLibrariesForSelfExtract=true
 
-      - name: Upload Cead Binaries
-        uses: Shopify/upload-to-release@v1.0.1
+      - uses: actions/upload-artifact@v3
+        name: Upload artifacts
         with:
-          name: ${{ env.proj }}${{ matrix.platform.ext }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          path: ${{ matrix.platform.name }}/${{ env.proj }}${{ matrix.platform.ext }}
+          name: ${{ env.proj }}${{ matrix.config.ext }}
+          path: ${{ matrix.config.name }}/${{ env.proj }}${{ matrix.config.ext }}
