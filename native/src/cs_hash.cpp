@@ -48,10 +48,6 @@ bool HashAdvance(Byml::Hash* hash, Byml::Hash::iterator* iterator, Byml::Hash::i
     return false;
 }
 
-auto* HashBegin(Byml::Hash* hash) {
-    return new auto{hash->begin()};
-}
-
 Byml::Hash* BuildEmptyHash() {
     return new Byml::Hash{};
 }
