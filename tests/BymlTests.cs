@@ -76,10 +76,7 @@ public class BymlTests
     public void FromText()
     {
         // Get a BYML string
-        string target;
-        using (Byml _byml = Byml.FromBinary(_target)) {
-            target = _byml.ToText().ToString(dispose: true);
-        }
+        string target = Byml.FromBinary(_target).ToText().ToString(dispose: true);
 
         // Load BYML from text data
         Byml byml = Byml.FromText(target);
@@ -127,5 +124,61 @@ public class BymlTests
         // disposed and throws this exception
         // (irrecoverable exception)
         // Assert.ThrowsException<ExecutionEngineException>(() => data.AsSpan().ToArray());
+    }
+
+    [TestMethod]
+    public void General()
+    {
+        // Load a BYML from binary data
+        using Byml byml = Byml.FromBinary(_target);
+
+        // Get a hash
+        Byml.Hash hash = byml.GetHash();
+
+        // Iterate the hash and get an array
+        foreach ((var key, var node) in hash) {
+            Byml.Array array = node.GetArray();
+            Assert.IsNotNull(array);
+            Assert.IsFalse(array.Length <= -1);
+        }
+
+        // Iterate the array and get a hash and string
+        Byml.Array actors = hash["Actors"].GetArray();
+        foreach (var actor in actors) {
+            string str = actor.GetHash()["name"].GetString();
+            Assert.IsNotNull(str);
+            Assert.IsTrue(str.Length > -1);
+        }
+
+        // Create a hash and add it to the root
+        Byml.Hash newHash = new Dictionary<string, Byml>() {
+            { "A", 1f }, { "B", 2d }, { "C", 3u }
+        };
+        hash.Add("NewHash", newHash);
+
+        Assert.IsTrue(hash.ContainsKey("NewHash"));
+        Assert.IsTrue(hash["NewHash"].Type == BymlType.Hash);
+        Assert.IsTrue(hash["NewHash"].GetHash().ContainsKey("A"));
+
+        // Create an array and add it to the root
+        Byml.Array newArray = new("A", "B", "C");
+        hash.Add("NewArray", newArray);
+
+        Assert.IsTrue(hash.ContainsKey("NewArray"));
+        Assert.IsTrue(hash["NewArray"].Type == BymlType.Array);
+        Assert.IsTrue(hash["NewArray"].GetArray().Length == 3);
+
+        // Clear the actors (array)
+        actors.Clear();
+        Assert.IsTrue(actors.Length == 0);
+
+        // Replace the hashes
+        hash["Hashes"] = "SomeString";
+        Assert.IsTrue(hash["Hashes"].Type == BymlType.String);
+        Assert.IsTrue(hash["Hashes"].GetString() == "SomeString");
+
+        // Print the text to make sure
+        // everything is still intact
+        Console.WriteLine(byml.ToText());
     }
 }
