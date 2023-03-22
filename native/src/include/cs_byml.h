@@ -9,8 +9,8 @@ using namespace oead;
 
 CEAD Byml* BymlFromBinary(const u8* src, u32 src_len);
 CEAD Byml* FromText(const char* src);
-CEAD void* BymlToBinary(Byml* byml, u8** dst, u32* dst_len, bool big_endian, int version);
-CEAD std::string* ToText(Byml* byml, const char** dst, int* dst_len);
+CEAD void* BymlToBinary(Byml* byml, bool big_endian, int version);
+CEAD std::string* ToText(Byml* byml);
 CEAD Byml::Type GetType(Byml* byml);
 CEAD Byml::Hash* GetHash(Byml* byml);
 CEAD Byml::Array* GetArray(Byml* byml);

@@ -16,7 +16,7 @@ void HashRemove(Byml::Hash* hash, const char* key) {
     hash->erase(key);
 }
 
-bool HashContains(Byml::Hash* hash, const char* key) {
+bool HashContainsKey(Byml::Hash* hash, const char* key) {
     return hash->contains(key);
 }
 
@@ -52,11 +52,7 @@ Byml::Hash* BuildEmptyHash() {
     return new Byml::Hash{};
 }
 
-Byml::Hash* BuildHash(char*** keys, Byml** values, u32 values_len) {
-    Byml::Hash* hash{};
-    for (size_t i = 0; i < values_len; i++) {
-        hash->insert({(*keys)[i], (*values)[i]});
-    }
-
-    return hash;
+bool FreeHash(Byml::Hash* hash) {
+    delete hash;
+    return true;
 }

@@ -10,18 +10,12 @@ Byml* FromText(const char* src) {
     return result;
 }
 
-void* BymlToBinary(Byml* byml, u8** dst, u32* dst_len, bool big_endian, int version) {
-    auto* result = new auto{byml->ToBinary(big_endian, version)};
-    *dst = result->data();
-    *dst_len = result->size();
-    return result;
+void* BymlToBinary(Byml* byml, bool big_endian, int version) {
+    return new auto{byml->ToBinary(big_endian, version)};
 }
 
 std::string* ToText(Byml* byml, const char** dst, int* dst_len) {
-    std::string* str = new auto{byml->ToText()};
-    *dst = str->c_str();
-    *dst_len = str->length();
-    return str;
+    return new auto{byml->ToText()};
 }
 
 Byml::Type GetType(Byml* byml) {
@@ -113,4 +107,9 @@ Byml* UInt64(U64 value) {
 
 Byml* Double(F64 value) {
     return new auto{Byml(value)};
+}
+
+bool FreeByml(Byml* byml) {
+    delete byml;
+    return true;
 }
