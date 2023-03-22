@@ -34,11 +34,10 @@ const char* GetString(Byml* byml) {
     return byml->GetString().c_str();
 }
 
-void* GetBinary(Byml* byml, u8** dst, u32* dst_size) {
-    auto* result = &byml->GetBinary();
-    *dst = result->data();
-    *dst_size = result->size();
-    return result;
+void GetBinary(Byml* byml, u8** dst, u32* dst_size) {
+    auto result = byml->GetBinary();
+    *dst = result.data();
+    *dst_size = result.size();
 }
 
 bool GetBool(Byml* byml) {
