@@ -18,8 +18,10 @@ public partial class Byml
 
         [LibraryImport(CeadLib)] private static partial void HashCurrent(IntPtr iterator, out byte* key, out Byml value);
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
+        [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyHash();
 
-        internal readonly IntPtr handle = IntPtr.Zero;
+        public override bool IsInvalid { get; }
+        public int Length => HashLength(handle);
 
         public static implicit operator Hash(IntPtr ptr) => new(ptr);
         public Hash(nint handle) => this.handle = handle;
@@ -36,10 +38,17 @@ public partial class Byml
         public bool ContainsKey(string key) => HashContainsKey(handle, key);
         public void Clear() => HashClear(handle);
 
-        /// <summary>Gets an enumerator for this span.</summary>
-        public Enumerator GetEnumerator() => new(handle);
+        public Hash() : base(BuildEmptyHash(), true) { }
 
-        /// <summary>Enumerates the elements of a <see cref="Span{T}"/>.</summary>
+        public static implicit operator Hash(Dictionary<string, Byml> values) => new(values);
+        public Hash(Dictionary<string, Byml> values) : base(BuildEmptyHash(), true)
+        {
+            foreach ((var key, var value) in values) {
+                HashAdd(handle, key, value);
+            }
+        }
+
+        public Enumerator GetEnumerator() => new(handle);
         public ref struct Enumerator
         {
             private readonly IntPtr _hash;
@@ -63,6 +72,11 @@ public partial class Byml
                     return new(Utf8StringMarshaller.ConvertToManaged(keyPtr)!, value);
                 }
             }
+        }
+
+        protected override bool ReleaseHandle()
+        {
+            return FreeHash(handle);
         }
     }
 }

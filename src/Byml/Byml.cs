@@ -28,7 +28,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] public static partial Byml FromTextCOM(string src);
     [LibraryImport(CeadLib)] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport(CeadLib)] private static partial BymlType GetType(IntPtr byml);
-    [LibraryImport(CeadLib)] private static partial IntPtr GetHash(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial Hash GetHash(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Array GetArray(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial IntPtr GetString(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial PtrHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
@@ -39,8 +39,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport(CeadLib)] private static partial long GetInt64(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial ulong GetUInt64(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial double GetDouble(IntPtr byml);
-
-    [LibraryImport(CeadLib, EntryPoint = "Hash")] private static partial IntPtr HashCOM(IntPtr value);
+    [LibraryImport(CeadLib, EntryPoint = "Hash")] private static partial IntPtr HashCOM(Hash value);
     [LibraryImport(CeadLib, EntryPoint = "Array")] private static partial IntPtr ArrayCOM(Array value);
     [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial IntPtr String(string value);
     [LibraryImport(CeadLib)] private static partial IntPtr Binary(byte* value, int value_len);
