@@ -20,6 +20,9 @@ add_library(Cead SHARED
     ./src/include/data_handle.h
     ./src/data_handle.cpp
 
+    ./src/include/string_handle.h
+    ./src/string_handle.cpp
+
     ./src/include/cs_yaz0.h
     ./src/cs_yaz0.cpp
 
