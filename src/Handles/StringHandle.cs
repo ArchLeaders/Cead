@@ -7,7 +7,7 @@ namespace Cead.Interop;
 public unsafe partial class StringHandle : SafeHandleMinusOneIsInvalid
 {
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FillString(IntPtr str, out byte* ptr, out int len);
-    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeString(byte* ptr);
+    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeString(IntPtr handle);
 
     private byte* _ptr;
     private int _len = -1;
@@ -40,6 +40,6 @@ public unsafe partial class StringHandle : SafeHandleMinusOneIsInvalid
 
     protected override bool ReleaseHandle()
     {
-        return FreeString(_ptr);
+        return FreeString(handle);
     }
 }

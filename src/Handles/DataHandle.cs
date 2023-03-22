@@ -6,7 +6,7 @@ namespace Cead.Interop;
 public unsafe partial class DataHandle : SafeHandleMinusOneIsInvalid
 {
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FillData(IntPtr vector, out byte* ptr, out int len);
-    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeVector(byte* ptr);
+    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeVector(IntPtr handle);
 
     private byte* _ptr;
     private int _len = -1;
@@ -37,6 +37,6 @@ public unsafe partial class DataHandle : SafeHandleMinusOneIsInvalid
 
     protected override bool ReleaseHandle()
     {
-        return FreeVector(_ptr);
+        return FreeVector(handle);
     }
 }
