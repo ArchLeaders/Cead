@@ -13,10 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so"
-						Condition="Exists('..\native\build\linux\Cead.so')" />
-	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib"
-						Condition="Exists('..\native\build\Cead.dll')" />
+	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" Condition="Exists('..\native\build\linux\Cead.so')" />
+	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" Condition="Exists('..\native\build\Cead.dll')" />
   </ItemGroup>
 
 </Project>
