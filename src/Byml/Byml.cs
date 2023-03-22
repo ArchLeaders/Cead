@@ -32,7 +32,7 @@ public unsafe partial class Byml : BymlHandle
     [LibraryImport(CeadLib)] private static partial BymlType GetType(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Hash GetHash(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Array GetArray(IntPtr byml);
-    [LibraryImport(CeadLib)] private static partial IntPtr GetString(IntPtr byml);
+    [LibraryImport(CeadLib)] private static partial byte* GetString(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial DataHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetBool(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial int GetInt(IntPtr byml);
@@ -105,7 +105,7 @@ public unsafe partial class Byml : BymlHandle
 
     public Hash GetHash() => GetHash(handle);
     public Array GetArray() => GetArray(handle);
-    public string? GetString()
+    public string GetString() => Utf8StringMarshaller.ConvertToManaged(GetString(handle))!;
     {
         return Marshal.PtrToStringUTF8(GetString(handle));
     }
