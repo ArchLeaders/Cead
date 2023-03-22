@@ -106,14 +106,10 @@ public unsafe partial class Byml : BymlHandle
     public Hash GetHash() => GetHash(handle);
     public Array GetArray() => GetArray(handle);
     public string GetString() => Utf8StringMarshaller.ConvertToManaged(GetString(handle))!;
+    public Span<byte> GetBinary()
     {
-        return Marshal.PtrToStringUTF8(GetString(handle));
-    }
-    public DataHandle GetBinary(out Span<byte> data)
-    {
-        DataHandle ptrHandle = GetBinary(handle, out byte* dst, out int dstLen);
-        data = new(dst, dstLen);
-        return ptrHandle;
+        GetBinary(handle, out byte* dst, out int dstLen);
+        return new(dst, dstLen);
     }
     public bool GetBool() => GetBool(handle);
     public int GetInt() => GetInt(handle);

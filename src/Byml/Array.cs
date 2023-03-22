@@ -20,6 +20,26 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyArray();
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeArray(IntPtr array);
 
+        private Array() : base(true) { }
+        public Array(IntPtr _handle) : base(true)
+        {
+            handle = _handle;
+            _isChild = false;
+        }
+
+        public Array(params Byml[] values) : this((IEnumerable<Byml>)values) { }
+        public Array(IEnumerable<Byml> values) : this(BuildEmptyArray())
+        {
+            foreach (var value in values) {
+                ArrayAdd(handle, value);
+            }
+        }
+
+        public static Array Empty()
+        {
+            return new(BuildEmptyArray());
+        }
+
         public int Length => ArrayLength(handle);
 
         public Byml this[int index] {
@@ -32,18 +52,6 @@ public partial class Byml
         public void Add(Byml node) => ArrayAdd(handle, node);
         public void Remove(int index) => ArrayRemove(handle, index);
         public void Clear() => ArrayClear(handle);
-
-        public Array(IntPtr _handle) : base(true) => handle = _handle;
-
-        public Array() : this(BuildEmptyArray()) { }
-
-        public static implicit operator Array(Byml[] values) => new(values);
-        public Array(params Byml[] values) : this(BuildEmptyArray())
-        {
-            for (int i = 0; i < values.Length; i++) {
-                ArrayAdd(handle, values[i]);
-            }
-        }
 
         public Enumerator GetEnumerator() => new(handle, Length);
         public ref struct Enumerator

@@ -23,6 +23,25 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyHash();
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeHash(IntPtr hash);
 
+        private Hash() : base(true) { }
+        public Hash(IntPtr _handle) : base(true)
+        {
+            handle = _handle;
+            _isChild = false;
+        }
+
+        public Hash(IDictionary<string, Byml> values) : this(BuildEmptyHash())
+        {
+            foreach ((var key, var value) in values) {
+                HashAdd(handle, key, value);
+            }
+        }
+
+        public static Hash Empty()
+        {
+            return new(BuildEmptyHash());
+        }
+
         public int Length => HashLength(handle);
 
         public Byml this[string key] {
@@ -34,18 +53,6 @@ public partial class Byml
         public void Remove(string key) => HashRemove(handle, key);
         public bool ContainsKey(string key) => HashContainsKey(handle, key);
         public void Clear() => HashClear(handle);
-
-        public Hash(IntPtr _handle) : base(true) => handle = _handle;
-
-        public Hash() : this(BuildEmptyHash()) { }
-
-        public static implicit operator Hash(Dictionary<string, Byml> values) => new(values);
-        public Hash(Dictionary<string, Byml> values) : this(BuildEmptyHash())
-        {
-            foreach ((var key, var value) in values) {
-                HashAdd(handle, key, value);
-            }
-        }
 
         public Enumerator GetEnumerator() => new(handle);
         public ref struct Enumerator
