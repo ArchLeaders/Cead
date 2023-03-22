@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿#pragma warning disable CA1419 // Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
+
+using Cead.Handles;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,7 +8,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Array : SafeHandleMinusOneIsInvalid
+    public unsafe partial class Array : BymlHandle
     {
         [LibraryImport(CeadLib)] private static partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport(CeadLib)] private static partial void ArraySet(IntPtr vector, int index, Byml value);
@@ -77,7 +79,7 @@ public partial class Byml
 
         protected override bool ReleaseHandle()
         {
-            return FreeArray(handle);
+            return _isChild || FreeArray(handle);
         }
     }
 }

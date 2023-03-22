@@ -1,7 +1,7 @@
 ﻿#pragma warning disable CA1419 // Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
 
+using Cead.Handles;
 using Cead.Interop;
-using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
@@ -23,7 +23,7 @@ public enum BymlType : int
     Double
 }
 
-public unsafe partial class Byml : SafeHandleMinusOneIsInvalid
+public unsafe partial class Byml : BymlHandle
 {
     [LibraryImport(CeadLib)] private static partial Byml BymlFromBinary(byte* src, int src_len);
     [LibraryImport(CeadLib)] private static partial DataHandle BymlToBinary(IntPtr byml, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
@@ -55,20 +55,28 @@ public unsafe partial class Byml : SafeHandleMinusOneIsInvalid
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeByml(IntPtr byml);
 
     private Byml() : base(true) { }
-    private Byml(IntPtr _handle) : base(true) => handle = _handle;
+    private Byml(IntPtr _handle) : base(true)
+    {
+        handle = _handle;
+        _isChild = false;
+    }
 
     public BymlType Type => GetType(handle);
 
     public static Byml FromBinary(ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
-            return BymlFromBinary(ptr, data.Length);
+            Byml byml = BymlFromBinary(ptr, data.Length);
+            byml._isChild = false;
+            return byml;
         }
     }
 
     public static Byml FromText(string text)
     {
-        return FromTextCOM(text);
+        Byml byml = FromTextCOM(text);
+        byml._isChild = true;
+        return byml;
     }
 
     public DataHandle ToBinary(bool bigEndian, int version = 2)
@@ -158,6 +166,6 @@ public unsafe partial class Byml : SafeHandleMinusOneIsInvalid
 
     protected override bool ReleaseHandle()
     {
-        return FreeByml(handle);
+        return _isChild || FreeByml(handle);
     }
 }
