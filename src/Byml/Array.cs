@@ -6,7 +6,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Array : SafeHandle
+    public unsafe partial class Array : UnmanagedBase
     {
         [LibraryImport(CeadLib)] private static partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport(CeadLib)] private static partial void ArraySet(IntPtr vector, int index, Byml value);
@@ -20,7 +20,6 @@ public partial class Byml
 
         public override bool IsInvalid { get; }
         public int Length => ArrayLength(handle);
-        public bool IsOwner { get; set; } = true;
 
         public Byml this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,20 +34,11 @@ public partial class Byml
 
         public Array() : base(BuildEmptyArray(), true) { }
 
-        public static implicit operator Array(Byml[] value) => new(value);
-        public Array(params Byml[] value) : base(BuildEmptyArray(), true)
+        public static implicit operator Array(Byml[] values) => new(values);
+        public Array(params Byml[] values) : base(BuildEmptyArray(), true)
         {
-            for (int i = 0; i < value.Length; i++) {
-                ArrayAdd(handle, value[i]);
-            }
-        }
-
-        public static implicit operator Array(IntPtr[] value) => new(value);
-        public Array(params IntPtr[] array) : base(BuildArray(array), true) { }
-        private static IntPtr BuildArray(IntPtr[] value)
-        {
-            fixed(IntPtr* ptr = value) {
-                return BuildArray(ptr, value.Length);
+            for (int i = 0; i < values.Length; i++) {
+                ArrayAdd(handle, values[i]);
             }
         }
 
