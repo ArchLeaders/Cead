@@ -14,7 +14,7 @@ void* BymlToBinary(Byml* byml, bool big_endian, int version) {
     return new auto{byml->ToBinary(big_endian, version)};
 }
 
-std::string* ToText(Byml* byml, const char** dst, int* dst_len) {
+std::string* ToText(Byml* byml) {
     return new auto{byml->ToText()};
 }
 
@@ -109,6 +109,7 @@ Byml* Double(F64 value) {
 }
 
 bool FreeByml(Byml* byml) {
+    std::cout << "[c++] Delete '" << byml << "'" << std::endl;
     delete byml;
     return true;
 }
