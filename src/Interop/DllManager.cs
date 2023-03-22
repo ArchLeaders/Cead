@@ -8,9 +8,9 @@ namespace Cead.Interop;
 public static class DllManager
 {
 #if LINUX
-    public const string CeadLib = "Cead.so";
+    internal const string CeadLib = "Cead.so";
 #else
-    public const string CeadLib = "Cead.lib";
+    internal const string CeadLib = "Cead.lib";
 #endif
 
 
