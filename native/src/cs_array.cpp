@@ -5,7 +5,7 @@ Byml* ArrayGet(Byml::Array* array, int index) {
 }
 
 void ArraySet(Byml::Array* array, int index, Byml* value) {
-    array->assign(index, *value);
+    array->at(index) = *value;
 }
 
 void ArrayAdd(Byml::Array* array, Byml* value) {
