@@ -30,6 +30,7 @@ public partial class Byml
             _isChild = false;
         }
 
+        public static implicit operator Hash(Dictionary<string, Byml> dict) => new(dict);
         public Hash(IDictionary<string, Byml> values) : this(BuildEmptyHash())
         {
             foreach ((var key, var value) in values) {
