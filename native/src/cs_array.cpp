@@ -44,17 +44,7 @@ Byml::Array* BuildArray(Byml** value, u32 value_len) {
     return byml_array;
 }
 
-// Byml::Array* BuildArray(Byml** value, u32 value_len) {
-//     try {
-//         for (size_t i = 0; i < value_len; i++) {
-//             std::cout << "[c++] " << value[i]->GetString() << std::endl;
-//         }
-//
-//         std::cout << "[c++] " << (*(value + value_len - 1))->GetString() << std::endl;
-//         return new Byml::Array{*value, *(value + value_len - 1)};
-//     } catch (const std::exception& exc) {
-//         std::cerr << "[c++] " << exc.what() << std::endl;
-//     }
-//
-//     return new Byml::Array{};
-// `}
+bool FreeArray(Byml::Array* array) {
+    delete array;
+    return true;
+}

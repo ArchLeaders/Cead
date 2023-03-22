@@ -36,6 +36,7 @@ public unsafe partial class Sarc : SafeHandle
 
     [LibraryImport(CeadLib)] private static partial void SarcCurrent(IntPtr iterator, out byte* key_ptr, out byte* dst, out int dst_len);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool SarcAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
+    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeSarc(IntPtr sarc, IntPtr writer);
 
     internal Sarc() : base(IntPtr.Zero, true) { }
     public Sarc(IntPtr handle) : base(handle, true) { }
@@ -152,14 +153,6 @@ public unsafe partial class Sarc : SafeHandle
 
     protected override bool ReleaseHandle()
     {
-        if (handle > -1) {
-            PtrHandle.FreePtr(handle);
-        }
-
-        if (_writer != null) {
-            PtrHandle.FreePtr((nint)_writer);
-        }
-
-        return true;
+        return FreeSarc(handle, _writer);
     }
 }

@@ -19,6 +19,7 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial void HashCurrent(IntPtr iterator, out byte* key, out Byml value);
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyHash();
+        [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeHash(IntPtr hash);
 
         public override bool IsInvalid { get; }
         public int Length => HashLength(handle);

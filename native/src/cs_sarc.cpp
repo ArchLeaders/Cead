@@ -97,3 +97,12 @@ bool SarcAdvance(SarcWriter* writer, SarcWriter::FileMap::iterator* iterator, Sa
 
     return false;
 }
+
+bool FreeSarc(Sarc* sarc, SarcWriter* writer) {
+    delete sarc;
+    if (writer != NULL) {
+        delete writer;
+    }
+
+    return true;
+}

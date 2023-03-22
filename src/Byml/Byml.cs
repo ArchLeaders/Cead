@@ -50,6 +50,7 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport(CeadLib)] private static partial IntPtr Int64(long value);
     [LibraryImport(CeadLib)] private static partial IntPtr UInt64(ulong value);
     [LibraryImport(CeadLib)] private static partial IntPtr Double(double value);
+    [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeByml(IntPtr byml);
 
     public static implicit operator IntPtr(Byml byml) => byml.handle;
     internal Byml() : base(IntPtr.Zero, true) { }
@@ -179,17 +180,6 @@ public unsafe partial class Byml : SafeHandle
 
     protected override bool ReleaseHandle()
     {
-        // Only dispose the resource if
-        // the byml object is the root
-        // of a byml structure.
-        // 
-        // Releasing children of the root
-        // will cause data corruption
-        // on other operations (such as yaml serialization).
-        if (IsRoot) {
-            return PtrHandle.FreePtr(handle);
-        }
-
-        return true;
+        return FreeByml(handle);
     }
 }

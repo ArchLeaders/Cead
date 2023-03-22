@@ -35,4 +35,6 @@ CEAD Byml* Float(F32 value);
 CEAD Byml* Int64(S64 value);
 CEAD Byml* UInt64(U64 value);
 CEAD Byml* Double(F64 value);
+
+CEAD bool FreeByml(Byml* byml);
 }

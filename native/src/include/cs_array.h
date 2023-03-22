@@ -19,4 +19,6 @@ CEAD Byml* ArrayCurrent(Byml::Array* array, int index);
 
 CEAD Byml::Array* BuildEmptyArray();
 CEAD Byml::Array* BuildArray(Byml** value, u32 value_len);
+
+CEAD bool FreeArray(Byml::Array* array);
 }
