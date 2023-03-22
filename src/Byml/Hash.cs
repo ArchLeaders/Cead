@@ -12,7 +12,7 @@ public partial class Byml
         [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashSet(IntPtr hash, string key, Byml value);
         [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashAdd(IntPtr hash, string key, Byml value);
         [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashRemove(IntPtr hash, string key);
-        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashContains(IntPtr hash, string key);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool HashContainsKey(IntPtr hash, string key);
         [LibraryImport(CeadLib)] private static partial void HashClear(IntPtr hash);
         [LibraryImport(CeadLib)] private static partial int HashLength(IntPtr hash);
 
@@ -33,7 +33,7 @@ public partial class Byml
 
         public void Add(string key, Byml value) => HashAdd(handle, key, value);
         public void Remove(string key) => HashRemove(handle, key);
-        public bool Contains(string key) => HashContains(handle, key);
+        public bool ContainsKey(string key) => HashContainsKey(handle, key);
         public void Clear() => HashClear(handle);
 
         /// <summary>Gets an enumerator for this span.</summary>
