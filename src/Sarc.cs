@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CA1419 // Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
 
 using Cead.Interop;
+using Microsoft.Win32.SafeHandles;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
@@ -17,10 +18,10 @@ public enum Mode
     Legacy, New
 }
 
-public unsafe partial class Sarc : SafeHandle
+public unsafe partial class Sarc : SafeHandleMinusOneIsInvalid
 {
     [LibraryImport(CeadLib)] private static partial Sarc SarcFromBinary(byte* src, int src_len);
-    [LibraryImport(CeadLib)] private static partial void SarcToBinary(IntPtr writer, out PtrHandle handle, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)] private static partial DataHandle SarcToBinary(IntPtr writer);
     [LibraryImport(CeadLib)] private static partial int GetNumFiles(IntPtr sarc);
     [LibraryImport(CeadLib)] private static partial int GetFileMapCount(IntPtr writer);
     [LibraryImport(CeadLib)] private static partial Endianness GetEndianness(IntPtr sarc);
@@ -38,16 +39,16 @@ public unsafe partial class Sarc : SafeHandle
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool SarcAdvance(IntPtr hash, IntPtr iterator, out IntPtr next);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeSarc(IntPtr sarc, IntPtr writer);
 
-    internal Sarc() : base(IntPtr.Zero, true) { }
-    public Sarc(IntPtr handle) : base(handle, true) { }
-    public Sarc(Endianness endian = Endianness.Little, Mode mode = Mode.New) : base(-1, true)
+    private Sarc() : base(true) { }
+    private Sarc(IntPtr _handle) : base(true) => handle = _handle;
+    public Sarc(Endianness endian = Endianness.Little, Mode mode = Mode.New) : base(true)
     {
         _writer = NewSarcWriter(endian, mode);
     }
 
     public Span<byte> this[string key] {
         get {
-            bool success = _writer != null ? SarcWriterGet((nint)_writer, key, out byte* ptr, out int len) : GetFile(handle, key, out ptr, out len);
+            bool success = _writer > -1 ? SarcWriterGet((nint)_writer, key, out byte* ptr, out int len) : GetFile(handle, key, out ptr, out len);
             if (!success) {
                 throw new KeyNotFoundException($"Could not find a file with the name '{key}'");
             }
@@ -64,13 +65,19 @@ public unsafe partial class Sarc : SafeHandle
         }
     }
 
-    public Span<byte> ToBinary(out PtrHandle handle)
+    public DataHandle ToBinary()
     {
-        SarcToBinary(Writer, out handle, out byte* dst, out int len);
-        return new(dst, len);
+        return SarcToBinary(Writer);
     }
 
-    public int Count => _writer != null ? GetFileMapCount((nint)_writer) : GetNumFiles(handle);
+    public void ToBinary(string file)
+    {
+        using DataHandle dataHandle = SarcToBinary(Writer);
+        using FileStream fs = File.Create(file);
+        fs.Write(dataHandle.AsSpan());
+    }
+
+    public int Count => _writer > -1 ? GetFileMapCount((nint)_writer) : GetNumFiles(handle);
     public Endianness Endian {
         get => GetEndianness(handle);
         set => SetEndianness(Writer, value);
@@ -94,10 +101,7 @@ public unsafe partial class Sarc : SafeHandle
         ClearSarcFiles(Writer);
     }
 
-    /// <summary>Gets an enumerator for this span.</summary>
     public Enumerator GetEnumerator() => new(Writer);
-
-    /// <summary>Enumerates the elements of a <see cref="Span{T}"/>.</summary>
     public ref struct Enumerator
     {
         private readonly IntPtr _writer;
@@ -141,11 +145,14 @@ public unsafe partial class Sarc : SafeHandle
         }
     }
 
-    private IntPtr? _writer;
+    private IntPtr _writer = -1;
     private IntPtr Writer {
         get {
-            _writer ??= GetSarcWriter(handle);
-            return (nint)_writer;
+            if (_writer <= -1) {
+                _writer = GetSarcWriter(handle);
+            }
+
+            return _writer;
         }
     }
 

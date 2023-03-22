@@ -8,7 +8,7 @@ extern "C" {
 using namespace oead;
 
 CEAD Sarc* SarcFromBinary(u8* src, u32 src_len);
-CEAD void SarcToBinary(SarcWriter* writer, void** handle, u8** dst, u32* dst_len);
+CEAD void* SarcToBinary(SarcWriter* writer);
 CEAD u32 GetNumFiles(Sarc* sarc);
 CEAD u32 GetFileMapCount(SarcWriter* writer);
 CEAD util::Endianness GetEndianness(Sarc* sarc);
@@ -24,4 +24,6 @@ CEAD void ClearSarcFiles(SarcWriter* writer);
 
 CEAD void SarcCurrent(SarcWriter::FileMap::iterator* iterator, const char** key, u8** dst, u32* dst_len);
 CEAD bool SarcAdvance(SarcWriter* writer, SarcWriter::FileMap::iterator* iterator, SarcWriter::FileMap::iterator** next);
+
+CEAD bool FreeSarc(Sarc* sarc, SarcWriter* writer);
 }

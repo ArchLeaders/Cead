@@ -4,11 +4,8 @@ Sarc* SarcFromBinary(u8* src, u32 src_len) {
     return new auto{Sarc({src, src_len})};
 }
 
-void SarcToBinary(SarcWriter* writer, void** handle, u8** dst, u32* dst_len) {
-    auto result = new auto{writer->Write()};
-    *handle = result;
-    *dst = result->second.data();
-    *dst_len = result->second.size();
+void* SarcToBinary(SarcWriter* writer) {
+    return new auto{writer->Write().second};
 }
 
 u32 GetNumFiles(Sarc* sarc) {
