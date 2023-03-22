@@ -1,4 +1,4 @@
-﻿using Cead.Interop;
+﻿using Microsoft.Win32.SafeHandles;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,7 +6,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Array : UnmanagedBase
+    public unsafe partial class Array : SafeHandleMinusOneIsInvalid
     {
         [LibraryImport(CeadLib)] private static partial Byml ArrayGet(IntPtr vector, int index);
         [LibraryImport(CeadLib)] private static partial void ArraySet(IntPtr vector, int index, Byml value);
@@ -19,7 +19,6 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial IntPtr BuildArray(IntPtr* value, int value_len);
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeArray(IntPtr array);
 
-        public override bool IsInvalid { get; }
         public int Length => ArrayLength(handle);
 
         public Byml this[int index] {
@@ -33,10 +32,12 @@ public partial class Byml
         public void Remove(int index) => ArrayRemove(handle, index);
         public void Clear() => ArrayClear(handle);
 
-        public Array() : base(BuildEmptyArray(), true) { }
+        public Array(IntPtr _handle) : base(true) => handle = _handle;
+
+        public Array() : this(BuildEmptyArray()) { }
 
         public static implicit operator Array(Byml[] values) => new(values);
-        public Array(params Byml[] values) : base(BuildEmptyArray(), true)
+        public Array(params Byml[] values) : this(BuildEmptyArray())
         {
             for (int i = 0; i < values.Length; i++) {
                 ArrayAdd(handle, values[i]);
@@ -44,7 +45,6 @@ public partial class Byml
         }
 
         public Enumerator GetEnumerator() => new(handle, Length);
-
         public ref struct Enumerator
         {
             private readonly IntPtr _array;

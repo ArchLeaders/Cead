@@ -1,7 +1,9 @@
 ﻿#pragma warning disable CA1419 // Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
 
 using Cead.Interop;
+using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Cead;
 
@@ -21,17 +23,17 @@ public enum BymlType : int
     Double
 }
 
-public unsafe partial class Byml : SafeHandle
+public unsafe partial class Byml : SafeHandleMinusOneIsInvalid
 {
     [LibraryImport(CeadLib)] private static partial Byml BymlFromBinary(byte* src, int src_len);
-    [LibraryImport(CeadLib)] private static partial PtrHandle BymlToBinary(IntPtr byml, out byte* dst, out int dst_len, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
+    [LibraryImport(CeadLib)] private static partial DataHandle BymlToBinary(IntPtr byml, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
     [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] public static partial Byml FromTextCOM(string src);
-    [LibraryImport(CeadLib)] private static partial PtrHandle ToText(IntPtr byml, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)] private static partial StringHandle ToText(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial BymlType GetType(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Hash GetHash(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Array GetArray(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial IntPtr GetString(IntPtr byml);
-    [LibraryImport(CeadLib)] private static partial PtrHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
+    [LibraryImport(CeadLib)] private static partial DataHandle GetBinary(IntPtr byml, out byte* dst, out int dst_len);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetBool(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial int GetInt(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial uint GetUInt(IntPtr byml);
@@ -52,69 +54,45 @@ public unsafe partial class Byml : SafeHandle
     [LibraryImport(CeadLib)] private static partial IntPtr Double(double value);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeByml(IntPtr byml);
 
-    public static implicit operator IntPtr(Byml byml) => byml.handle;
-    internal Byml() : base(IntPtr.Zero, true) { }
+    private Byml() : base(true) { }
+    private Byml(IntPtr _handle) : base(true) => handle = _handle;
 
     public BymlType Type => GetType(handle);
-    public override bool IsInvalid { get; }
-    public bool IsRoot { get; set; } = false;
 
     public static Byml FromBinary(ReadOnlySpan<byte> data)
     {
         fixed (byte* ptr = data) {
-            Byml byml = BymlFromBinary(ptr, data.Length);
-            byml.IsRoot = true;
-            return byml;
+            return BymlFromBinary(ptr, data.Length);
         }
     }
 
     public static Byml FromText(string text)
     {
-        Byml byml = FromTextCOM(text);
-        byml.IsRoot = true;
-        return byml;
+        return FromTextCOM(text);
     }
 
-    public PtrHandle ToBinary(out Span<byte> data, bool bigEndian, int version = 2)
+    public DataHandle ToBinary(bool bigEndian, int version = 2)
     {
-        PtrHandle ptrHandle = BymlToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
-        data = new(ptr, dstLen);
-        return ptrHandle;
+        return BymlToBinary(handle, bigEndian, version);
     }
 
     public void ToBinary(string file, bool bigEndian, int version = 2)
     {
-        using PtrHandle ptrHandle = BymlToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
+        using DataHandle dataHandle = BymlToBinary(handle, bigEndian, version);
         using FileStream fs = File.Create(file);
-        Span<byte> data = new(ptr, dstLen);
-        fs.Write(data);
+        fs.Write(dataHandle.AsSpan());
     }
 
-    public byte[] ToBinary(bool bigEndian, int version = 2)
+    public StringHandle ToText()
     {
-        using PtrHandle ptrHandle = BymlToBinary(handle, out byte* ptr, out int dstLen, bigEndian, version);
-        return new Span<byte>(ptr, dstLen).ToArray();
-    }
-
-    public PtrHandle ToText(out Span<byte> data)
-    {
-        PtrHandle ptrHandle = ToText(handle, out byte* dst, out int dst_len);
-        data = new(dst, dst_len);
-        return ptrHandle;
-    }
-
-    public string ToText()
-    {
-        using PtrHandle ptrHandle = ToText(handle, out byte* dst, out int _);
-        return Marshal.PtrToStringUTF8((IntPtr)dst)!;
+        return ToText(handle);
     }
 
     public void ToText(string file)
     {
-        using PtrHandle ptrHandle = ToText(handle, out byte* dst, out int dst_len);
+        using StringHandle strHandle = ToText(handle);
         using FileStream fs = File.Create(file);
-        Span<byte> data = new(dst, dst_len);
-        fs.Write(data);
+        fs.Write(strHandle.AsSpan());
     }
 
     public Hash GetHash() => GetHash(handle);
@@ -123,9 +101,9 @@ public unsafe partial class Byml : SafeHandle
     {
         return Marshal.PtrToStringUTF8(GetString(handle));
     }
-    public PtrHandle GetBinary(out Span<byte> data)
+    public DataHandle GetBinary(out Span<byte> data)
     {
-        PtrHandle ptrHandle = GetBinary(handle, out byte* dst, out int dstLen);
+        DataHandle ptrHandle = GetBinary(handle, out byte* dst, out int dstLen);
         data = new(dst, dstLen);
         return ptrHandle;
     }
@@ -138,42 +116,42 @@ public unsafe partial class Byml : SafeHandle
     public double GetDouble() => GetDouble(handle);
 
     public static implicit operator Byml(Hash value) => new(value);
-    public Byml(Hash value) : base(HashCOM(value.handle), true) { }
+    public Byml(Hash value) : this(HashCOM(value)) { }
 
     public static implicit operator Byml(Array value) => new(value);
-    public Byml(Array value) : base(ArrayCOM(value), true) { }
+    public Byml(Array value) : this(ArrayCOM(value)) { }
 
     public static implicit operator Byml(string value) => new(value);
-    public Byml(string value) : base(String(value), true) { }
+    public Byml(string value) : this(String(value)) { }
 
     public static implicit operator Byml(byte[] value) => new(value.AsSpan());
     public static implicit operator Byml(Span<byte> value) => new(value);
-    public Byml(Span<byte> value) : base(Binary(value), true) { }
+    public Byml(Span<byte> value) : this(Binary(value)) { }
 
     public static implicit operator Byml(bool value) => new(value);
-    public Byml(bool value) : base(Bool(value), true) { }
+    public Byml(bool value) : this(Bool(value)) { }
 
     public static implicit operator Byml(int value) => new(value);
-    public Byml(int value) : base(Int(value), true) { }
+    public Byml(int value) : this(Int(value)) { }
 
     public static implicit operator Byml(uint value) => new(value);
-    public Byml(uint value) : base(UInt(value), true) { }
+    public Byml(uint value) : this(UInt(value)) { }
 
     public static implicit operator Byml(float value) => new(value);
-    public Byml(float value) : base(Float(value), true) { }
+    public Byml(float value) : this(Float(value)) { }
 
     public static implicit operator Byml(long value) => new(value);
-    public Byml(long value) : base(Int64(value), true) { }
+    public Byml(long value) : this(Int64(value)) { }
 
     public static implicit operator Byml(ulong value) => new(value);
-    public Byml(ulong value) : base(UInt64(value), true) { }
+    public Byml(ulong value) : this(UInt64(value)) { }
 
     public static implicit operator Byml(double value) => new(value);
-    public Byml(double value) : base(Double(value), true) { }
+    public Byml(double value) : this(Double(value)) { }
 
     private static IntPtr Binary(Span<byte> value)
     {
-        fixed(byte* ptr = value) {
+        fixed (byte* ptr = value) {
             return Binary(ptr, value.Length);
         }
     }
