@@ -16,7 +16,6 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial int ArrayLength(IntPtr vector);
         [LibraryImport(CeadLib)] private static partial Byml ArrayCurrent(IntPtr array, int index);
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyArray();
-        [LibraryImport(CeadLib)] private static partial IntPtr BuildArray(IntPtr* value, int value_len);
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeArray(IntPtr array);
 
         public int Length => ArrayLength(handle);
