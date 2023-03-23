@@ -15,6 +15,7 @@ public unsafe partial class DataHandle : SafeHandleMinusOneIsInvalid
     public DataHandle() : base(true) { }
 
     public static implicit operator Span<byte>(DataHandle data) => data.AsSpan();
+    public static implicit operator ReadOnlySpan<byte>(DataHandle data) => data.AsSpan();
     public Span<byte> AsSpan()
     {
         FillData(handle, out _ptr, out _len);
