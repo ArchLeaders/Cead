@@ -101,21 +101,21 @@ public unsafe partial class Sarc : SafeHandleMinusOneIsInvalid
         ClearSarcFiles(Writer);
     }
 
-    public Enumerator GetEnumerator() => new(Writer);
+    public Enumerator GetEnumerator() => new(this);
     public ref struct Enumerator
     {
-        private readonly IntPtr _writer;
+        private readonly Sarc _handle;
         private IntPtr _iterator;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal Enumerator(IntPtr writer)
+        internal Enumerator(Sarc handle)
         {
-            _writer = writer;
+            _handle = handle;
             _iterator = IntPtr.Zero;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool MoveNext() => SarcAdvance(_writer, _iterator, out _iterator);
+        public bool MoveNext() => SarcAdvance(_handle.Writer, _iterator, out _iterator);
 
         /// <summary>Gets the element at the current position of the enumerator.</summary>
         public KeyValuePair<string, SarcFile> Current {
