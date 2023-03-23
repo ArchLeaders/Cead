@@ -127,10 +127,11 @@ public unsafe partial class Sarc : SafeHandleMinusOneIsInvalid
         }
     }
 
-    public readonly struct SarcFile
+    public struct SarcFile
     {
         private readonly byte* _ptr;
         private readonly int _len;
+        private byte[]? _cache;
 
         public SarcFile(byte* ptr, int len)
         {
@@ -142,6 +143,15 @@ public unsafe partial class Sarc : SafeHandleMinusOneIsInvalid
         public Span<byte> AsSpan()
         {
             return new(_ptr, _len);
+        }
+
+        /// <summary>
+        /// Creates a managed copy of the data
+        /// </summary>
+        /// <returns></returns>
+        public Span<byte> ToArray()
+        {
+            return _cache ??= AsSpan().ToArray();
         }
     }
 
