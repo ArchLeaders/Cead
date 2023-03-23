@@ -17,6 +17,13 @@ public static unsafe partial class Yaz0
         }
     }
 
+    public static Span<byte> TryDecompress(string file, out bool isYaz0) => TryDecompress(File.ReadAllBytes(file), out isYaz0);
+    public static Span<byte> TryDecompress(Span<byte> data, out bool isYaz0)
+    {
+        isYaz0 = data.Length > 4 && data[0..4].SequenceEqual("Yaz0"u8);
+        return isYaz0 ? Decompress(data) : data;
+    }
+
     public static Span<byte> Decompress(string file) => Decompress(File.ReadAllBytes(file));
     public static Span<byte> Decompress(ReadOnlySpan<byte> src)
     {
