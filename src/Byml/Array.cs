@@ -10,13 +10,13 @@ public partial class Byml
 {
     public unsafe partial class Array : BymlHandle
     {
-        [LibraryImport(CeadLib)] private static partial Byml ArrayGet(IntPtr vector, int index);
-        [LibraryImport(CeadLib)] private static partial void ArraySet(IntPtr vector, int index, Byml value);
-        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(IntPtr hash, Byml value);
-        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(IntPtr hash, int index);
-        [LibraryImport(CeadLib)] private static partial void ArrayClear(IntPtr vector);
-        [LibraryImport(CeadLib)] private static partial int ArrayLength(IntPtr vector);
-        [LibraryImport(CeadLib)] private static partial Byml ArrayCurrent(IntPtr array, int index);
+        [LibraryImport(CeadLib)] private static partial Byml ArrayGet(Array vector, int index);
+        [LibraryImport(CeadLib)] private static partial void ArraySet(Array vector, int index, Byml value);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayAdd(Array hash, Byml value);
+        [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void ArrayRemove(Array hash, int index);
+        [LibraryImport(CeadLib)] private static partial void ArrayClear(Array vector);
+        [LibraryImport(CeadLib)] private static partial int ArrayLength(Array vector);
+        [LibraryImport(CeadLib)] private static partial Byml ArrayCurrent(Array array, int index);
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyArray();
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeArray(IntPtr array);
 
@@ -31,7 +31,14 @@ public partial class Byml
         public Array(IEnumerable<Byml> values) : this(BuildEmptyArray())
         {
             foreach (var value in values) {
-                ArrayAdd(handle, value);
+                ArrayAdd(this, value);
+            }
+        }
+
+        public Array(ReadOnlySpan<Byml> values) : this(BuildEmptyArray())
+        {
+            foreach (var value in values) {
+                ArrayAdd(this, value);
             }
         }
 
@@ -40,28 +47,28 @@ public partial class Byml
             return new(BuildEmptyArray());
         }
 
-        public int Length => ArrayLength(handle);
+        public int Length => ArrayLength(this);
 
         public Byml this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ArrayGet(handle, index);
+            get => ArrayGet(this, index);
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => ArraySet(handle, index, value);
+            set => ArraySet(this, index, value);
         }
 
-        public void Add(Byml node) => ArrayAdd(handle, node);
-        public void Remove(int index) => ArrayRemove(handle, index);
-        public void Clear() => ArrayClear(handle);
+        public void Add(Byml node) => ArrayAdd(this, node);
+        public void Remove(int index) => ArrayRemove(this, index);
+        public void Clear() => ArrayClear(this);
 
-        public Enumerator GetEnumerator() => new(handle, Length);
+        public Enumerator GetEnumerator() => new(this, Length);
         public ref struct Enumerator
         {
-            private readonly IntPtr _array;
+            private readonly Array _array;
             private readonly int _length;
             private int _index;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal Enumerator(IntPtr array, int length)
+            internal Enumerator(Array array, int length)
             {
                 _array = array;
                 _length = length;
