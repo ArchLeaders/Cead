@@ -23,7 +23,7 @@ public enum BymlType : int
     Double
 }
 
-public unsafe partial class Byml : BymlHandle
+public unsafe partial class Byml : ClassHandle
 {
     [LibraryImport(CeadLib)] private static partial Byml BymlFromBinary(byte* src, int src_len);
     [LibraryImport(CeadLib)] private static partial DataHandle BymlToBinary(IntPtr byml, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
@@ -74,7 +74,7 @@ public unsafe partial class Byml : BymlHandle
 
     public static Byml FromText(string text)
     {
-        Byml byml = FromTextCOM(text);
+        Byml byml = BymlFromText(text);
         byml._isChild = true;
         return byml;
     }
@@ -93,12 +93,12 @@ public unsafe partial class Byml : BymlHandle
 
     public StringHandle ToText()
     {
-        return ToText(handle);
+        return BymlToText(handle);
     }
 
     public void ToText(string file)
     {
-        using StringHandle strHandle = ToText(handle);
+        using StringHandle strHandle = BymlToText(handle);
         using FileStream fs = File.Create(file);
         fs.Write(strHandle.AsSpan());
     }

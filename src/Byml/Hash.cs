@@ -9,7 +9,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Hash : BymlHandle
+    public unsafe partial class Hash : ClassHandle
     {
         [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial Byml HashGet(IntPtr hash, string key);
         [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial void HashSet(IntPtr hash, string key, Byml value);

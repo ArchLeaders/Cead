@@ -8,7 +8,7 @@ namespace Cead;
 
 public partial class Byml
 {
-    public unsafe partial class Array : BymlHandle
+    public unsafe partial class Array : ClassHandle
     {
         [LibraryImport(CeadLib)] private static partial Byml ArrayGet(Array vector, int index);
         [LibraryImport(CeadLib)] private static partial void ArraySet(Array vector, int index, Byml value);
