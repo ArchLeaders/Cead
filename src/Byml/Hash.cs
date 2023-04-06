@@ -23,6 +23,7 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyHash();
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeHash(IntPtr hash);
 
+        private Hash() { }
         public Hash(IntPtr _handle)
         {
             handle = _handle;

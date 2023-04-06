@@ -54,6 +54,7 @@ public unsafe partial class Byml : ClassHandle
     [LibraryImport(CeadLib)] private static partial IntPtr Double(double value);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeByml(IntPtr byml);
 
+    private Byml() { }
     private Byml(IntPtr _handle)
     {
         handle = _handle;

@@ -20,6 +20,7 @@ public partial class Byml
         [LibraryImport(CeadLib)] private static partial IntPtr BuildEmptyArray();
         [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeArray(IntPtr array);
 
+        private Array() { }
         public Array(IntPtr _handle)
         {
             handle = _handle;
