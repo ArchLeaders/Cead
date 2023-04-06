@@ -6,5 +6,5 @@ public abstract class ClassHandle : SafeHandleMinusOneIsInvalid
 {
     protected bool _isChild = true;
 
-    protected ClassHandle(bool ownsHandle) : base(ownsHandle) { }
+    protected ClassHandle() : base(true) { }
 }
