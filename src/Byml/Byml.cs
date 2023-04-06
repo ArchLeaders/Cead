@@ -27,8 +27,8 @@ public unsafe partial class Byml : BymlHandle
 {
     [LibraryImport(CeadLib)] private static partial Byml BymlFromBinary(byte* src, int src_len);
     [LibraryImport(CeadLib)] private static partial DataHandle BymlToBinary(IntPtr byml, [MarshalAs(UnmanagedType.Bool)] bool big_endian, int version);
-    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "FromText")] private static partial Byml FromTextCOM(string src);
-    [LibraryImport(CeadLib)] private static partial StringHandle ToText(IntPtr byml);
+    [LibraryImport(CeadLib, StringMarshalling = StringMarshalling.Utf8)] private static partial Byml BymlFromText(string src);
+    [LibraryImport(CeadLib)] private static partial StringHandle BymlToText(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial BymlType GetType(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Hash GetHash(IntPtr byml);
     [LibraryImport(CeadLib)] private static partial Array GetArray(IntPtr byml);

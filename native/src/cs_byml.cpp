@@ -5,7 +5,7 @@ Byml* BymlFromBinary(const u8* src, u32 src_len) {
     return result;
 }
 
-Byml* FromText(const char* src) {
+Byml* BymlFromText(const char* src) {
     auto* result = new auto{Byml::FromText(src)};
     return result;
 }
@@ -14,7 +14,7 @@ void* BymlToBinary(Byml* byml, bool big_endian, int version) {
     return new auto{byml->ToBinary(big_endian, version)};
 }
 
-std::string* ToText(Byml* byml) {
+std::string* BymlToText(Byml* byml) {
     return new auto{byml->ToText()};
 }
 
