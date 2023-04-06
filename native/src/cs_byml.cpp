@@ -109,7 +109,6 @@ Byml* Double(F64 value) {
 }
 
 bool FreeByml(Byml* byml) {
-    std::cout << "[c++] Delete '" << byml << "'" << std::endl;
     delete byml;
     return true;
 }
