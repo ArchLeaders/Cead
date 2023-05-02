@@ -28,29 +28,19 @@ public static class DllManager
             string dll = Path.Combine(path, lib);
 
 #if DEBUG
+            // Always copy in debug mode
             Directory.CreateDirectory(path);
             using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cead.Lib.{lib}")!;
             using (FileStream fs = File.Create(dll)) {
                 stream.CopyTo(fs);
             }
 #else
-            try {
+            if (!File.Exists(dll)) {
                 Directory.CreateDirectory(path);
                 using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cead.Lib.{lib}")!;
                 using FileStream fs = File.Create(dll);
                 stream.CopyTo(fs);
             }
-            catch (Exception ex) {
-                Console.WriteLine($"Failed to copy Cead: {ex}");
-            }
-
-            // if (!File.Exists(dll)) {
-            //     Directory.CreateDirectory(path);
-            //     using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cead.Lib.{lib}")!;
-            //     using (FileStream fs = File.Create(dll)) {
-            //         stream.CopyTo(fs);
-            //     }
-            // }
 #endif
 
             NativeLibrary.Load(dll);
