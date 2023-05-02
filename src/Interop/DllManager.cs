@@ -28,8 +28,8 @@ public static class DllManager
         foreach (var lib in _libs) {
             string dll = Path.Combine(path, lib);
 
-#if DEBUG
-            // Always copy in debug mode
+#if true
+            // Hardcode copy until the versioning system is fixed
             Directory.CreateDirectory(path);
             using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cead.Lib.{lib}")!;
             using (FileStream fs = File.Create(dll)) {
