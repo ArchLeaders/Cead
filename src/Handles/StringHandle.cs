@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Cead.Interop;
+namespace Cead.Handles;
 
 public unsafe partial class StringHandle : SafeHandleMinusOneIsInvalid
 {

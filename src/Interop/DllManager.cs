@@ -13,7 +13,6 @@ public static class DllManager
     internal const string CeadLib = "Cead.lib";
 #endif
 
-
     private static readonly string[] _libs = { CeadLib };
     private static bool _isLoaded;
 
@@ -23,7 +22,7 @@ public static class DllManager
             return;
         }
 
-        string path = Path.Combine(Path.GetTempPath(), $"Cead-{typeof(Yaz0).Assembly.GetName().Version}");
+        string path = Path.Combine(Path.GetTempPath(), $"Cead-{typeof(DllManager).Assembly.GetName().Version}");
 
         foreach (var lib in _libs) {
             string dll = Path.Combine(path, lib);
