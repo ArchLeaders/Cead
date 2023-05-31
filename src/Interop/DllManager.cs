@@ -9,6 +9,8 @@ public static class DllManager
 {
 #if LINUX
     internal const string CeadLib = "Cead.so";
+#elif MACOS
+    internal const string CeadLib = "Cead.dylib";
 #else
     internal const string CeadLib = "Cead.lib";
 #endif
