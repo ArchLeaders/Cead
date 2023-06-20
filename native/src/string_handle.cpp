@@ -5,7 +5,7 @@ bool FreeString(std::string* str) {
     return true;
 }
 
-void FillString(std::string* str, const char** dst, u32* dst_len) {
+void FillString(std::string* str, const char** dst, size_t* dst_len) {
     *dst = str->c_str();
     *dst_len = str->length();
 }

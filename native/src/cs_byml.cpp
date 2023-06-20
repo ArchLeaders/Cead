@@ -1,21 +1,21 @@
 #include "include/cs_byml.h"
 
 Byml* BymlFromBinary(const u8* src, u32 src_len) {
-    auto* result = new auto{Byml::FromBinary({src, src_len})};
+    auto* result = new auto(Byml::FromBinary({src, src_len}));
     return result;
 }
 
 Byml* BymlFromText(const char* src) {
-    auto* result = new auto{Byml::FromText(src)};
+    auto* result = new auto(Byml::FromText(src));
     return result;
 }
 
 void* BymlToBinary(Byml* byml, bool big_endian, int version) {
-    return new auto{byml->ToBinary(big_endian, version)};
+    return new auto(byml->ToBinary(big_endian, version));
 }
 
 std::string* BymlToText(Byml* byml) {
-    return new auto{byml->ToText()};
+    return new auto(byml->ToText());
 }
 
 Byml::Type GetType(Byml* byml) {
@@ -69,43 +69,43 @@ f64 GetDouble(Byml* byml) {
 }
 
 Byml* Hash(Byml::Hash* value) {
-    return new auto{Byml(*value)};
+    return new auto(Byml(*value));
 }
 
 Byml* Array(Byml::Array* value) {
-    return new auto{Byml(*value)};
+    return new auto(Byml(*value));
 }
 
 Byml* String(char* value) {
-    return new auto{Byml(std::string(value))};
+    return new auto(Byml(std::string(value)));
 }
 
 Byml* Binary(u8* value, int value_len) {
-    return new auto{Byml(std::vector<u8>(value_len, *value))};
+    return new auto(Byml(std::vector<u8>(value_len, *value)));
 }
 
 Byml* Int(S32 value) {
-    return new auto{Byml(value)};
+    return new auto(Byml(value));
 }
 
 Byml* UInt(U32 value) {
-    return new auto{Byml(value)};
+    return new auto(Byml(value));
 }
 
 Byml* Float(F32 value) {
-    return new auto{Byml(value)};
+    return new auto(Byml(value));
 }
 
 Byml* Int64(S64 value) {
-    return new auto{Byml(value)};
+    return new auto(Byml(value));
 }
 
 Byml* UInt64(U64 value) {
-    return new auto{Byml(value)};
+    return new auto(Byml(value));
 }
 
 Byml* Double(F64 value) {
-    return new auto{Byml(value)};
+    return new auto(Byml(value));
 }
 
 bool FreeByml(Byml* byml) {

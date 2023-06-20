@@ -36,7 +36,7 @@ void HashCurrent(Byml::Hash::iterator* iterator, const char** key, Byml** value)
 
 bool HashAdvance(Byml::Hash* hash, Byml::Hash::iterator* iterator, Byml::Hash::iterator** next) {
     if (iterator == NULL) {
-        *next = new auto{hash->begin()};
+        *next = new auto(hash->begin());
         return true;
     }
 

@@ -1,11 +1,11 @@
 #include "include/cs_sarc.h"
 
 Sarc* SarcFromBinary(u8* src, u32 src_len) {
-    return new auto{Sarc({src, src_len})};
+    return new auto(Sarc({src, src_len}));
 }
 
 void* SarcToBinary(SarcWriter* writer) {
-    return new auto{writer->Write().second};
+    return new auto(writer->Write().second);
 }
 
 u32 GetNumFiles(Sarc* sarc) {
@@ -36,11 +36,11 @@ bool GetFile(Sarc* sarc, char* name, const u8** dst, u32* dst_len) {
 }
 
 SarcWriter* NewSarcWriter(util::Endianness endian, SarcWriter::Mode mode) {
-    return new auto{SarcWriter(endian, mode)};
+    return new auto(SarcWriter(endian, mode));
 }
 
 SarcWriter* GetSarcWriter(Sarc* sarc) {
-    return new auto{SarcWriter::FromSarc(*sarc)};
+    return new auto(SarcWriter::FromSarc(*sarc));
 }
 
 void SetWriterMode(SarcWriter* writer, SarcWriter::Mode mode) {
@@ -83,7 +83,7 @@ bool SarcAdvance(SarcWriter* writer, SarcWriter::FileMap::iterator* iterator, Sa
     }
 
     if (iterator == NULL) {
-        *next = new auto{writer->m_files.begin()};
+        *next = new auto(writer->m_files.begin());
         return true;
     }
 
