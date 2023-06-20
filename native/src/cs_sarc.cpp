@@ -97,7 +97,7 @@ bool SarcAdvance(SarcWriter* writer, SarcWriter::FileMap::iterator* iterator, Sa
 
 bool FreeSarc(Sarc* sarc, SarcWriter* writer) {
     delete sarc;
-    if (writer != NULL) {
+    if (reinterpret_cast<std::uintptr_t>(writer) > -1) {
         delete writer;
     }
 

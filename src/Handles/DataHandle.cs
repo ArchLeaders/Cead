@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 
-namespace Cead.Interop;
+namespace Cead.Handles;
 
 public unsafe partial class DataHandle : SafeHandleMinusOneIsInvalid
 {

@@ -1,4 +1,4 @@
-﻿using Cead;
+using Cead;
 using Cead.Interop;
 
 DllManager.LoadCead();

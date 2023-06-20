@@ -455,4 +455,7 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
+# macOS Specific files
+.DS_Store
+
 # End of https://www.toptal.com/developers/gitignore/api/c++,cmake,visualstudio

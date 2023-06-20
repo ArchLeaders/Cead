@@ -5,16 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<DefineConstants Condition="Exists('..\native\build\linux\Cead.so')">LINUX</DefineConstants>
+      <DefineConstants Condition="Exists('..\native\build\linux\Cead.so')">LINUX</DefineConstants>
+      <DefineConstants Condition="Exists('..\native\build\macos\Cead.dylib')">MACOS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Lib\Cead.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-	  <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" Condition="Exists('..\native\build\linux\Cead.so')" />
-	  <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" Condition="Exists('..\native\build\Cead.dll')" />
+      <EmbeddedResource Include="..\native\build\linux\Cead.so" Link="Lib\Cead.so" Condition="Exists('..\native\build\linux\Cead.so')" />
+      <EmbeddedResource Include="..\native\build\macos\Cead.dylib" Link="Lib\Cead.dylib" Condition="Exists('..\native\build\macos\Cead.dylib')" />
+      <EmbeddedResource Include="..\native\build\Cead.dll" Link="Lib\Cead.lib" Condition="Exists('..\native\build\Cead.dll')" />
   </ItemGroup>
 
 </Project>
