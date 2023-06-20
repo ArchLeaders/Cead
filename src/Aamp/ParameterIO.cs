@@ -38,8 +38,6 @@ public unsafe partial class ParameterIO : ParameterList
     [LibraryImport(CeadLib)] private static partial StringHandle AampToText(IntPtr pio);
     [LibraryImport(CeadLib)][return: MarshalAs(UnmanagedType.Bool)] private static partial bool FreeAamp(IntPtr aamp);
 
-    public ParameterIO() => _isChild = false;
-
     public static ParameterIO FromBinary(Span<byte> data)
     {
         fixed (byte* ptr = data) {
